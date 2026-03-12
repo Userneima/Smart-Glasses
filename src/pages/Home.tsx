@@ -304,7 +304,7 @@ export default function Home({ targetSection }: HomeProps) {
                 <div className="grid gap-8 md:grid-cols-2">
               <div className="space-y-5">
                 <h2 className="text-2xl md:text-3xl">为何选择 Ray-Ban Meta？</h2>
-                <ul className="mt-3">
+                <ul className="mt-3 list-disc list-outside pl-6">
                   <li className="mb-4 text-sm leading-relaxed text-white/75">
                     <strong className="text-white">时效性优势：</strong>
                     Gen 2 于 2025 年 9 月发布，处于行业领先迭代周期，代表了当前 <span className="highlight-marker">AI 硬件与时尚消费品的最高集成水准</span>
