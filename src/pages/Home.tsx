@@ -304,11 +304,26 @@ export default function Home({ targetSection }: HomeProps) {
                 <div className="grid gap-8 md:grid-cols-2">
               <div className="space-y-5">
                 <h2 className="text-2xl md:text-3xl">为何选择 Ray-Ban Meta？</h2>
-                <ul className="space-y-3 text-sm leading-relaxed text-white/75">
-                  <li><span className="text-white">时效性：</span>Gen 2 于 2025 年 9 月发布，初代持续迭代，均属近一年行业重点产品。</li>
-                  <li><span className="text-white">市场代表性：</span>2025 年市占约 85%（Omdia），销量超 700 万副，同比增超 2 倍；全球首款销量破 200 万台的智能眼镜。</li>
-                  <li><span className="text-white">汇报可讲性：</span>技术参数、供应链与市场数据丰富；产业链中国供应商占比高，便于上中下游分析。</li>
-                  <li><span className="text-white">行业意义：</span>定义「无屏 AI 眼镜 + 时尚品牌」形态；IDC 将无屏智能眼镜列为 2025 年增速最快品类（约 +247%）。</li>
+                <ul className="mt-3">
+                  <li className="mb-4 text-sm leading-relaxed text-white/75">
+                    <strong className="text-white">时效性优势：</strong>
+                    Gen 2 于 2025 年 9 月发布，处于行业领先迭代周期，代表了当前 <span className="highlight-marker">AI 硬件与时尚消费品的最高集成水准</span>
+                  </li>
+
+                  <li className="mb-4 text-sm leading-relaxed text-white/75">
+                    <strong className="text-white">市场统治力：</strong>
+                    2025 年占据约 <span className="highlight-marker">85% 市场份额</span>（Omdia），销量突破 <span className="highlight-marker">700 万副</span>，是全球首款验证了“<span className="highlight-marker">无屏形态</span>”商业闭环的爆款产品
+                  </li>
+
+                  <li className="mb-4 text-sm leading-relaxed text-white/75">
+                    <strong className="text-white">产业链研究价值：</strong>
+                    技术参数透明且供应链数据详实；<span className="highlight-marker">中国供应商占比极高</span>，为上下游产业协同及 CMF 工艺分析提供了优质样本
+                  </li>
+
+                  <li className="mb-4 text-sm leading-relaxed text-white/75">
+                    <strong className="text-white">行业定义标准：</strong>
+                    成功定义了 <span className="highlight-marker">「无屏 AI 眼镜 + 时尚品牌」</span> 的新物种形态；IDC 将其列为 2025 年全球增速最快（<span className="highlight-marker">+247%</span>）的硬件品类
+                  </li>
                 </ul>
               </div>
                   <div className="flex flex-col">
