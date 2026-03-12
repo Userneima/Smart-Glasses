@@ -573,7 +573,27 @@ export default function Home({ targetSection }: HomeProps) {
               {/* Image removed per request */}
 
               <div className="space-y-5">
-                <Figure src={'/report_media/影视剧即时翻译效果.png'} caption={'影视剧即时翻译效果'} credit={'Youtube账号sandyinthemood截取'} />
+                <div className="grid gap-6 md:grid-cols-2">
+                  <figure className="space-y-3">
+                    <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 h-48">
+                      <img src={'/report_media/影视剧即时翻译效果.png'} alt="影视剧即时翻译效果" className="w-full h-full object-cover" loading="lazy" />
+                    </div>
+                    <figcaption className="text-xs leading-relaxed text-white/55">
+                      <span className="text-white/75">影视剧即时翻译效果</span>
+                      <span className="block pt-1 text-white/45">来源：Youtube账号sandyinthemood截取</span>
+                    </figcaption>
+                  </figure>
+
+                  <figure className="space-y-3">
+                    <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 h-48">
+                      <img src={'/report_media/发布会演示效果.png'} alt="发布会演示效果" className="w-full h-full object-cover" loading="lazy" />
+                    </div>
+                    <figcaption className="text-xs leading-relaxed text-white/55">
+                      <span className="text-white/75">发布会演示效果</span>
+                      <span className="block pt-1 text-white/45">来源：Meta发布会截图</span>
+                    </figcaption>
+                  </figure>
+                </div>
                 <h2 className="text-2xl md:text-3xl">智能声场：内容可信度的隐形变量</h2>
                 <p className="text-sm leading-relaxed text-white/75">
                   五麦克风阵列被官方用于强调“immersive audio recording”与在嘈杂/有风环境下更好表现。
