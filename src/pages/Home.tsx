@@ -8,7 +8,6 @@ Design manifesto (commitment):
 
 import { useEffect, useMemo } from "react";
 import hero from "@/assets/hero.png";
-import productGroup from "@/assets/product_group.jpeg";
 import camera12mp from "@/assets/camera_12mp.jpeg";
 import lookAndAsk from "@/assets/look_and_ask.svg";
 import hardwareArch from "@/assets/hardware_arch.svg";
@@ -28,13 +27,33 @@ function Hairline() {
   );
 }
 
+/** 章节间分隔线（比 Hairline 更醒目，用于 section 之间） */
+function SectionDivider() {
+  return (
+    <div className="h-px w-full bg-gradient-to-r from-transparent via-white/20 to-transparent" aria-hidden />
+  );
+}
+
+/** 加强版章节标题：左侧色条 + 大号编号 + 标签 */
 function SectionLabel({ no, label }: { no: string; label: string }) {
   return (
-    <div className="flex items-baseline gap-3">
-      <div className="text-xs tracking-[0.35em] text-white/55">{no}</div>
-      <div className="text-sm tracking-[0.18em] text-white/80 uppercase">
-        {label}
+    <div className="flex items-center gap-4">
+      <div className="h-8 w-1 shrink-0 rounded-full bg-[oklch(0.78_0.18_190)] shadow-[0_0_12px_rgba(88,255,255,0.4)]" />
+      <div className="flex items-baseline gap-3">
+        <div className="text-lg font-semibold tabular-nums text-white/90">{no}</div>
+        <div className="text-sm tracking-[0.18em] text-white/80 uppercase">
+          {label}
+        </div>
       </div>
+    </div>
+  );
+}
+
+/** 章节大号装饰编号（背景用，弱化显示） */
+function SectionNumberDecoration({ no }: { no: string }) {
+  return (
+    <div className="pointer-events-none absolute -left-2 top-0 select-none font-display text-[6rem] font-bold leading-none text-white/[0.06] md:-left-4 md:text-[8rem]" aria-hidden>
+      {no}
     </div>
   );
 }
@@ -74,19 +93,65 @@ function Figure({
   );
 }
 
+/** 汇报配图/视频：按文件名从 public/report_media/ 读取，根据后缀自动区分图片或视频 */
+function MediaFigureByFile({
+  filename,
+  caption,
+  className,
+}: {
+  filename: string;
+  caption: string;
+  className?: string;
+}) {
+  const src = `/report_media/${filename}`;
+  const isVideo = /\.(mp4|webm)$/i.test(filename);
+  return (
+    <figure className={cn("space-y-3", className)}>
+      <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+        {isVideo ? (
+          <video
+            src={src}
+            controls
+            playsInline
+            className="w-full"
+            preload="metadata"
+          />
+        ) : (
+          <img src={src} alt={caption} className="w-full" loading="lazy" />
+        )}
+      </div>
+      <figcaption className="text-xs leading-relaxed text-white/55">
+        <span className="text-white/75">{caption}</span>
+        <span className="block pt-1 text-white/45">来源：Meta Newsroom</span>
+      </figcaption>
+    </figure>
+  );
+}
+
 export default function Home({ targetSection }: HomeProps) {
   const nav = useMemo<NavItem[]>(
     () => [
       { id: "cover", label: "封面", no: "00" },
-      { id: "fundamentals", label: "基本面", no: "01" },
-      { id: "specs", label: "产品构成与参数", no: "02" },
-      { id: "ai", label: "AI 应用点", no: "03" },
-      { id: "design", label: "设计创新点", no: "04" },
-      { id: "industry", label: "产业分析", no: "05" },
-      { id: "outlook", label: "总结与展望", no: "06" },
-      { id: "sources", label: "参考来源", no: "07" },
+      { id: "case", label: "案例选择", no: "01" },
+      { id: "brand", label: "品牌", no: "02" },
+      { id: "product", label: "产品构成", no: "03" },
+      { id: "specs", label: "技术参数", no: "04" },
+      { id: "ai", label: "AI 应用", no: "05" },
+      { id: "design", label: "设计创新", no: "06" },
+      { id: "scenarios", label: "应用场景", no: "07" },
+      { id: "market", label: "市场", no: "08" },
+      { id: "industry", label: "产业链", no: "09" },
+      { id: "pain", label: "痛点", no: "10" },
+      { id: "competitive", label: "竞品对比", no: "11" },
+      { id: "summary", label: "总结/趋势", no: "12" },
+      { id: "sources", label: "参考", no: "13" },
     ],
     []
+  );
+
+  const productChildren = useMemo(
+    () => nav.filter((it) => ["specs", "ai", "design", "scenarios"].includes(it.id)),
+    [nav]
   );
 
   useEffect(() => {
@@ -116,13 +181,57 @@ export default function Home({ targetSection }: HomeProps) {
             </div>
           </div>
 
-          <nav className="w-full">
-            <div className="mx-auto flex max-w-7xl items-center justify-center gap-4 text-sm text-white/70">
-              {nav.map((it) => (
-                <a key={it.id} href={`/#/${it.id}`} className="rounded-md px-3 py-2 hover:bg-white/5 hover:text-white">
-                  {it.label}
-                </a>
-              ))}
+          <nav className="w-full overflow-visible">
+            <div className="mx-auto flex max-w-7xl items-center justify-center gap-2 md:gap-4 text-sm text-white/70 min-w-max px-2 md:min-w-0 md:flex-wrap md:justify-center">
+              {nav.map((it) => {
+                if (["specs", "ai", "design", "scenarios"].includes(it.id)) {
+                  return null;
+                }
+
+                if (it.id === "product") {
+                  return (
+                    <div key={it.id} className="relative">
+                      <div className="group inline-flex items-center rounded-md px-2.5 py-2 hover:bg-white/5 hover:text-white whitespace-nowrap cursor-pointer" aria-haspopup="true">
+                        <a href={`/#/${it.id}`} className="inline-flex items-center gap-2">
+                          <span>{it.label}</span>
+                        </a>
+                        {/* Down arrow */}
+                        <svg className="ml-1 h-3 w-3 text-white/60 group-hover:text-white transition" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                          <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+
+                        {/* Dropdown - absolute, hidden by default, shown on hover */}
+                        <div className="pointer-events-none absolute left-0 top-full z-40 mt-0 pt-2 w-56 rounded-2xl border border-white/10 bg-[oklch(0.145_0_0_/_0.98)] px-3 py-2 text-sm text-white/70 opacity-0 shadow-[0_18px_45px_rgba(0,0,0,0.65)] backdrop-blur transition duration-150 group-hover:pointer-events-auto group-hover:opacity-100">
+                          <div className="mb-1 text-[10px] tracking-[0.22em] text-white/45">产品构成 · 深入维度</div>
+                          <div className="flex flex-col gap-1">
+                            {productChildren.map((sub) => (
+                              <a
+                                key={sub.id}
+                                href={`/#/${sub.id}`}
+                                className="flex items-center gap-2 rounded-md px-2 py-1 hover:bg-white/8 hover:text-white"
+                              >
+                                <span className="text-[10px] text-white/40 opacity-0 group-hover:opacity-100 transition duration-150">{sub.no}</span>
+                                <span>{sub.label}</span>
+                              </a>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }
+
+                return (
+                  <a
+                    key={it.id}
+                    href={`/#/${it.id}`}
+                    className="group rounded-md px-2.5 py-2 hover:bg-white/5 hover:text-white whitespace-nowrap"
+                  >
+                    <span>{it.label}</span>
+                    <span className="ml-1 text-[10px] text-white/45 opacity-0 group-hover:opacity-100 transition duration-150">{it.no}</span>
+                  </a>
+                );
+              })}
             </div>
           </nav>
         </div>
@@ -132,52 +241,50 @@ export default function Home({ targetSection }: HomeProps) {
         {/* Left sidebar removed - TOC moved to header, personal info moved to footer */}
 
         {/* Content */}
-        <div className="space-y-16">
-          {/* Cover */}
+        <div className="space-y-24">
+          {/* Cover（不套卡片，保持全幅视觉） */}
           <section id="cover" className="scroll-mt-28">
             <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-white/5">
               <img
                 src={hero}
-                alt="封面背景"
+                alt="Ray-Ban Meta 智能眼镜"
                 className="absolute inset-0 h-full w-full object-cover opacity-80"
               />
               <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,0.88),rgba(0,0,0,0.30),rgba(0,0,0,0.65))]" />
-              <div className="relative grid gap-10 p-8 md:grid-cols-[1fr_420px] md:p-12">
+              <div className="relative grid gap-10 p-8 md:grid-cols-[1fr_380px] md:p-12">
                 <div className="space-y-6">
                   <div className="flex flex-wrap gap-2">
-                    <GlowBadge>AI 硬件第二形态</GlowBadge>
-                    <GlowBadge>多模态交互</GlowBadge>
-                    <GlowBadge>无屏幕计算</GlowBadge>
+                    <GlowBadge>市占约 85%</GlowBadge>
+                    <GlowBadge>无屏 AI 眼镜</GlowBadge>
+                    <GlowBadge>2025 Gen 2</GlowBadge>
                   </div>
 
-                  <h1 className="text-4xl leading-[1.06] md:text-6xl">
-                    隐形技术的胜利：<br />
-                    Ray‑Ban Meta 如何定义 AI 硬件的第二形态
+                  <h1 className="text-4xl leading-[1.06] md:text-5xl">
+                    Ray‑Ban Meta 智能眼镜<br />
+                    案例调研汇报
                   </h1>
 
-                  <p className="max-w-2xl text-base leading-relaxed text-white/72 md:text-lg">
-                    智能设计课程案例调研｜以 AIPM 视角拆解产品策略，以工业设计视角审视“无感化”形态与社会心理机制。
+                  <p className="max-w-2xl text-base leading-relaxed text-white/72 md:text-lg md:whitespace-nowrap">
+                    智能设计课程｜市场格局、核心产品、技术迭代、产业链与用户反馈多维度拆解分析
                   </p>
 
                   <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-white/55">
-                    <span>核心命题：从“可穿戴相机”→“环境理解入口”</span>
-                    <span className="h-1 w-1 rounded-full bg-white/25" />
-                    <span>关键词：PMF / Context Signal / Trust Feature</span>
+                    <span>12 章节 · 案例选择 → 品牌 → 产品 → 参数 → AI → 设计 → 场景 → 市场 → 产业链 → 痛点 → 竞品 → 总结</span>
                   </div>
                 </div>
 
                 <div className="space-y-4">
                   <div className="rounded-2xl border border-white/10 bg-black/35 p-4">
-                    <div className="text-xs tracking-[0.3em] text-white/55">ONE‑LINE TAKE</div>
+                    <div className="text-xs tracking-[0.3em] text-white/55">为何选本案例</div>
                     <p className="mt-3 text-sm leading-relaxed text-white/80">
-                      2024 的爆发并非硬件堆料，而是“多模态能力下放 + 社交分发场景”带来的 PMF 再确认。
+                      近一年产品、全球标杆、产业链中国供应链占比高，适合做深度拆解与汇报。
                     </p>
                   </div>
 
                   <div className="rounded-2xl border border-white/10 bg-black/35 p-4">
-                    <div className="text-xs tracking-[0.3em] text-white/55">DELIVERABLE</div>
+                    <div className="text-xs tracking-[0.3em] text-white/55">汇报形式</div>
                     <p className="mt-3 text-sm leading-relaxed text-white/75">
-                      网页长图文 / 幻灯片式叙事结构：可直接投屏展示。
+                      网页版 PPT · 视觉动线清晰 · 配图与数据支撑完整。
                     </p>
                   </div>
                 </div>
@@ -185,259 +292,209 @@ export default function Home({ targetSection }: HomeProps) {
             </div>
           </section>
 
-          {/* Fundamentals */}
-          <section id="fundamentals" className="scroll-mt-28 space-y-8">
-            <SectionLabel no="01" label="基本面" />
-            <Hairline />
+          <SectionDivider />
 
-            <div className="grid gap-5 grid-cols-1 md:grid-cols-12 items-start">
-              <div className="md:col-span-6 space-y-4">
-                <h2 className="text-2xl md:text-3xl">产品演进与市场增长分析</h2>
-
-                <motion.div className="relative mt-4 rounded-2xl border border-white/10 bg-white/5 p-6" initial={{opacity:0}} whileInView={{opacity:1}} viewport={{once:true}} transition={{duration:0.5}}>
-                  <div className="absolute left-6 top-6 bottom-6 w-px bg-white/6" />
-                  <div className="pl-12 pr-4 space-y-8">
-                    <motion.div initial={{opacity:0,x:-8}} whileInView={{opacity:1,x:0}} viewport={{once:true}} transition={{duration:0.45}}>
-                      <div className="flex items-start gap-4">
-                        <div className="mt-1 h-3 w-3 rounded-full bg-[oklch(0.78_0.18_190)] shadow-[0_0_14px_rgba(88,255,255,0.12)]" />
-                        <div>
-                          <div className="text-xs text-white/55">2023.10 · 开售</div>
-                          <div className="mt-1 text-lg font-semibold text-white">基础版上线 · 定价 $299 美元</div>
-                          <p className="mt-2 text-sm text-white/75">$299 的亲民定价帮助产品降低入门壁垒，配合 Ray‑Ban 品牌认知实现快速市场覆盖。</p>
-                          <div className="mt-2 text-xs text-white/55">（Meta Newsroom, 2023-09）</div>
-                        </div>
-                      </div>
-                    </motion.div>
-
-                    <motion.div initial={{opacity:0,x:-8}} whileInView={{opacity:1,x:0}} viewport={{once:true}} transition={{duration:0.45, delay:0.06}}>
-                      <div className="flex items-start gap-4">
-                        <div className="mt-1 h-4 w-4 rounded-full bg-[oklch(0.73_0.18_305)] shadow-[0_0_16px_rgba(173,88,255,0.14)] scale-110" />
-                        <div>
-                          <div className="text-xs text-white/55">2024.04 · 关键转折</div>
-                          <div className="mt-1 text-lg font-semibold text-white">多模态 AI（Look and Ask）全面推送</div>
-                          <p className="mt-2 text-sm text-white/75">此举将产品从“拍摄工具”本质上跨越为“智能助理”，增强了日常可用性与留存，是产品定位的质变。</p>
-                          <div className="mt-2 text-xs text-white/55">（The Verge, 2024-04）</div>
-                        </div>
-                      </div>
-                    </motion.div>
-
-                    <motion.div initial={{opacity:0,x:-8}} whileInView={{opacity:1,x:0}} viewport={{once:true}} transition={{duration:0.45, delay:0.12}}>
-                      <div className="flex items-start gap-4">
-                        <div className="mt-1 h-3 w-3 rounded-full bg-white/40" />
-                        <div>
-                          <div className="text-xs text-white/55">市场表现解读</div>
-                          <p className="mt-2 text-sm text-white/75">二代短期内突破 2M+ 的出货量，相比第一代 Ray‑Ban Stories 的表现显示了“经典设计 + 实用 AI”组合达成了产品市场契合（PMF）。供不应求状态反映供应链端对市场热度的低估；TikTok 等平台的病毒传播放大了购买动机并反哺销量。</p>
-                          <div className="mt-2 text-xs text-white/55">（Vision Monday, 2025-02；Meta Newsroom, 2024-09）</div>
-                        </div>
-                      </div>
-                    </motion.div>
-                  </div>
-                </motion.div>
-              </div>
-
-              <div className="md:col-span-6 space-y-4">
-                <div className="rounded-2xl border border-white/10 overflow-hidden bg-black/30 p-0">
-                  <img src={productGroup} alt="产品示意" className="w-full h-72 object-cover" />
-                </div>
-
-                <div className="grid grid-cols-3 gap-5">
-                  <div className="rounded-2xl border border-white/10 bg-black/30 p-4 text-center">
-                    <div className="text-xs text-white/55">销量</div>
-                    <div className="mt-2 text-2xl font-bold">2M+</div>
-                    <div className="mt-1 text-sm text-white/70">短期出货突破</div>
-                  </div>
-
-                  <div className="rounded-2xl border border-white/10 bg-black/30 p-4 text-center">
-                    <div className="text-xs text-white/55">增长</div>
-                    <div className="mt-2 text-2xl font-bold">持续加速</div>
-                    <div className="mt-1 text-sm text-white/70">社交分发与改进驱动</div>
-                  </div>
-
-                  <div className="rounded-2xl border border-white/10 bg-black/30 p-4 text-center">
-                    <div className="text-xs text-white/55">核心驱动</div>
-                    <div className="mt-2 text-2xl font-bold">多模态 AI</div>
-                    <div className="mt-1 text-sm text-white/70">从“拍摄”到“助手”的定位升级</div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="md:col-span-12">
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-6 mt-4">
-                  <div className="grid gap-4 md:grid-cols-2 items-center">
-                    <div>
-                      <div className="text-xs tracking-[0.28em] text-white/55">AIPM 深度洞察</div>
-                      <h3 className="mt-2 text-xl">AIPM 视角对比与洞察</h3>
-                      <p className="mt-3 text-sm text-white/75">对比第一代的低留存，二代在一年内突破 2M+，说明在产品策略上完成了“形式（经典镜框）与功能（多模态 AI）”的双向适配，从而触达更广泛的使用场景与社交传播路径。</p>
-                    </div>
-                    <div>
-                      <div className="text-sm text-white/75">Ray‑Ban Meta 的关键不是单纯的硬件堆料，而是把环境感知与低摩擦交互结合，形成内容‑分发‑购买的闭环；AIPM 框架下，这代表“能用 + 好用 + 易传播”的三角驱动。</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="md:col-span-12">
-                <div className="rounded-2xl border border-white/10 bg-black/20 p-4 mt-4">
-                  <div className="grid grid-cols-2 gap-4 items-center">
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-full bg-white/8 flex items-center justify-center">M</div>
-                      <div>
-                        <div className="text-sm font-semibold text-white">Meta</div>
-                        <div className="text-xs text-white/65">模型、应用与分发</div>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-3 justify-end">
-                      <div>
-                        <div className="text-sm font-semibold text-white">EssilorLuxottica</div>
-                        <div className="text-xs text-white/65">设计、制造与渠道</div>
-                      </div>
-                      <div className="h-10 w-10 rounded-full bg-white/8 flex items-center justify-center">L</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
-              <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                <div>
-                  <div className="text-xs tracking-[0.28em] text-white/55">AIPM INSIGHT</div>
-                  <h3 className="mt-2 text-xl">从“功能卖点”到“分发飞轮”</h3>
-                </div>
-                <div className="max-w-2xl text-sm leading-relaxed text-white/75">
-                  Ray‑Ban Meta 在 2024 的关键不是再造一个屏幕，而是把“环境”转化为可调用的 Context Signal，叠加 Instagram / Facebook 等分发网络，形成更低摩擦的内容生产与传播闭环。
-                </div>
-              </div>
-            </div>
-
-            <div className="grid gap-8">
+          {/* 01 案例选择说明 */}
+          <section id="case" className="scroll-mt-28">
+            <div className="relative rounded-2xl border border-white/10 bg-white/[0.03] p-6 md:p-8">
+              <SectionNumberDecoration no="01" />
+              <div className="relative space-y-8">
+                <SectionLabel no="01" label="案例选择说明" />
+                <Hairline />
+                <div className="grid gap-8 md:grid-cols-2">
               <div className="space-y-5">
-                <h2 className="text-2xl md:text-3xl">所属企业：Meta × Luxottica</h2>
-                <div className="space-y-4 text-sm leading-relaxed text-white/75">
-                  <p>
-                    <span className="text-white">Meta（AI/软件侧）：</span>负责 Meta AI、应用生态与云端推理能力。Meta 2024-04 官宣 Meta AI “Built with Llama 3”，并明确 Meta AI 也在美国的 Ray‑Ban Meta 眼镜上可用。
-                    <span className="text-white/55">（Meta Newsroom, 2024-04）</span>
-                  </p>
-                  <p>
-                    <span className="text-white">EssilorLuxottica（设计/制造/渠道侧）：</span>负责 Ray‑Ban 品牌资产、规模化制造与全球零售/验光渠道。
-                  </p>
-                  <p>
-                    <span className="text-white">合作延展：</span>EssilorLuxottica 官方表述聚焦 smartglasses，并在新闻稿中强调 Ray‑Ban Meta 在“digital eyewear”方向的牵引作用。
-                    <span className="text-white/55">（EssilorLuxottica, FY2024 Results）</span>
-                  </p>
-                </div>
+                <h2 className="text-2xl md:text-3xl">为何选择 Ray-Ban Meta？</h2>
+                <ul className="space-y-3 text-sm leading-relaxed text-white/75">
+                  <li><span className="text-white">时效性：</span>Gen 2 于 2025 年 9 月发布，初代持续迭代，均属近一年行业重点产品。</li>
+                  <li><span className="text-white">市场代表性：</span>2025 年市占约 85%（Omdia），销量超 700 万副，同比增超 2 倍；全球首款销量破 200 万台的智能眼镜。</li>
+                  <li><span className="text-white">汇报可讲性：</span>技术参数、供应链与市场数据丰富；产业链中国供应商占比高，便于上中下游分析。</li>
+                  <li><span className="text-white">行业意义：</span>定义「无屏 AI 眼镜 + 时尚品牌」形态；IDC 将无屏智能眼镜列为 2025 年增速最快品类（约 +247%）。</li>
+                </ul>
               </div>
+                  <div className="flex flex-col">
+                    <div className="overflow-hidden rounded-2xl border border-white/10 bg-black/30">
+                      <video
+                        src={`/report_media/商品使用宣传片.mp4`}
+                        controls
+                        playsInline
+                        className="w-full"
+                        preload="metadata"
+                      />
+                    </div>
 
-              <div className="space-y-4">
-                <div className="rounded-2xl border border-white/10 bg-black/30 p-6">
-                  <div className="text-xs tracking-[0.28em] text-white/55">PARTNERSHIP MODEL</div>
-                  <div className="mt-3 grid gap-3 text-sm text-white/75">
-                    <div className="flex items-start gap-3">
-                      <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-[oklch(0.78_0.18_190)]" />
-                      <span><span className="text-white">Meta</span> = 模型 + OS/应用 + 分发</span>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-[oklch(0.73_0.18_305)]" />
-                      <span><span className="text-white">EssilorLuxottica</span> = 设计语言 + 制造 + 渠道</span>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <span className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-white/45" />
-                      <span>结果 = “像眼镜的 AI 设备”，更低心理成本</span>
+                    <div className="mt-3 text-xs leading-relaxed text-white/55">
+                      <div className="text-white/75">商品使用宣传片</div>
+                      <div className="block pt-1 text-white/45">来源：Meta Newsroom</div>
                     </div>
                   </div>
                 </div>
-
-                <Figure
-                  src={camera12mp}
-                  caption="关键硬件卖点的视觉化表达：12MP 超广角相机（示意图）"
-                  credit="Meta Newsroom（2023-09）"
-                />
               </div>
             </div>
           </section>
 
-          {/* Specs */}
-          <section id="specs" className="scroll-mt-28 space-y-8">
-            <SectionLabel no="02" label="产品构成与参数" />
-            <Hairline />
+          <SectionDivider />
 
-            <div className="grid gap-8">
-              <div className="space-y-5">
-                <h2 className="text-2xl md:text-3xl">硬件拆解：最小闭环</h2>
-                <p className="text-sm leading-relaxed text-white/75">
-                  无屏幕 AI 硬件的“最小闭环”可以用一句话描述：<span className="text-white">看（camera）+ 听/说（mic & speaker）+ 低功耗算力（AR1）</span>。
+          {/* 02 品牌与所属企业 */}
+          <section id="brand" className="scroll-mt-28">
+            <div className="relative rounded-2xl border border-white/10 bg-white/[0.03] p-6 md:p-8">
+              <SectionNumberDecoration no="02" />
+              <div className="relative space-y-8">
+                <SectionLabel no="02" label="品牌与所属企业" />
+                <Hairline />
+            <div className="space-y-6">
+              <h2 className="text-2xl md:text-3xl">Meta × EssilorLuxottica</h2>
+              <div className="grid gap-6 md:grid-cols-2">
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center text-white font-semibold">M</div>
+                    <span className="text-lg font-semibold text-white">Meta</span>
+                  </div>
+                  <p className="text-sm text-white/75">负责 Meta AI、应用生态与云端推理；官宣 Meta AI「Built with Llama 3」，并明确在美国 Ray‑Ban Meta 眼镜上可用。角色：模型、OS/应用与内容分发。</p>
+                </div>
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center text-white font-semibold">L</div>
+                    <span className="text-lg font-semibold text-white">EssilorLuxottica</span>
+                  </div>
+                  <p className="text-sm text-white/75">拥有 Ray-Ban、Oakley 等品牌；负责镜框设计、光学、规模化制造与全球零售及验光渠道。合作延展至 2030 年。</p>
+                </div>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-black/30 p-5">
+                <div className="text-xs tracking-[0.28em] text-white/55">合作模式小结</div>
+                <p className="mt-3 text-sm text-white/75">Meta 提供能力与生态，EssilorLuxottica 提供品牌、工业设计与渠道，结果是把产品做成「像眼镜的 AI 设备」，降低心理门槛，缩短从尝鲜到日常佩戴的 adoption 曲线。</p>
+              </div>
+                <div className="grid gap-6 md:grid-cols-2">
+                <MediaFigureByFile filename={'产品正侧视图.jpg'} caption={'产品正侧视图'} />
+                <Figure src={camera12mp} caption="12MP 超广角相机模组（示意图）" credit="Meta Newsroom" />
+              </div>
+            </div>
+              </div>
+            </div>
+          </section>
+
+          <SectionDivider />
+
+          {/* 03 产品外观与结构构成 */}
+          <section id="product" className="scroll-mt-28">
+            <div className="relative rounded-2xl border border-white/10 bg-white/[0.03] overflow-hidden box-border p-10">
+              <SectionNumberDecoration no="03" />
+              <div className="relative space-y-8">
+                <SectionLabel no="03" label="产品外观与结构构成" />
+                <Hairline />
+            <div className="grid gap-16 md:grid-cols-10 w-full">
+              {/* 第一行：视觉与 CMF */}
+              <div className="md:col-span-3 flex flex-col justify-center">
+                <h2 className="text-2xl md:text-3xl">产品形态描述</h2>
+                <p className="mt-3 text-sm leading-relaxed text-white/75">
+                  Gen 2 延续了 Wayfarer 等经典廓形，通过极高密度的硬件堆叠，将整机重量严苛控制在
+                  <span className="highlight-marker">52g</span>
+                  的黄金临界点。这不仅是工业设计的突破，更是为了达成
+                  <span className="highlight-marker">All-day Wearability</span>
+                  的佩戴体验。在 CMF 策略上，
+                  <span className="highlight-marker">Caramel</span>
+                  与
+                  <span className="highlight-marker">Jeans</span>
+                  采用的半透明板材设计，巧妙地将精密电子元件转化为视觉装饰，利用“极客美学”降低了高科技产品的侵入感，使其成功从“穿戴设备”跃迁为具有 AI 能力的时尚配饰。
                 </p>
-                <ul className="space-y-2 text-sm text-white/75">
-                  <li>• Snapdragon AR1 Gen1（Meta Newsroom, 2023-09）</li>
-                  <li>• 12MP 超广角相机（Meta Newsroom, 2023-09）</li>
-                  <li>• 五麦克风阵列（Meta Newsroom, 2023-09）</li>
-                </ul>
               </div>
 
-              <Figure
-                src={hardwareArch}
-                caption="核心组件关系图（课程自绘）"
-                credit="根据 Meta Newsroom（2023-09）公开信息整理"
-              />
-            </div>
+              <div className="md:col-span-7 flex gap-8">
+                <div className="flex-1 min-w-0">
+                  <img src={'/report_media/04_Looks_1-carousel.png'} alt="Caramel" className="w-full max-w-full h-auto object-contain" loading="lazy" />
+                  <div className="mt-4 text-xs leading-relaxed text-white/55">
+                    <span className="text-white/75 text-sm leading-[1.5]">Caramel (琥珀棕)</span>
+                    <span className="block mt-2 text-white/45">来源：Ray-Ban Meta 官网公开素材</span>
+                  </div>
+                </div>
 
+                <div className="flex-1 min-w-0">
+                  <img src={'/report_media/04_Looks_3-carousel.png'} alt="Jeans" className="w-full max-w-full h-auto object-contain" loading="lazy" />
+                  <div className="mt-4 text-xs leading-relaxed text-white/55">
+                    <span className="text-white/75 text-sm leading-[1.5]">Jeans (牛仔蓝)</span>
+                    <span className="block mt-2 text-white/45">来源：Ray-Ban Meta 官网公开素材</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* 第二行，保持同样 3:7 栅格 */}
+              <div className="md:col-span-3 flex flex-col justify-center">
+                <h2 className="text-2xl md:text-3xl">产品结构构成</h2>
+                <p className="text-sm leading-relaxed text-white/75">
+                  核心架构搭载专门优化的
+                  <span className="highlight-marker">Snapdragon AR1 Gen1</span>
+                  芯片，构建起
+                  <span className="highlight-marker">低功耗的多模态感知闭环</span>。
+                  内部组件采用对称配重与热管理优化布局，有效避免了智能眼镜常见的偏重与发热痛点。值得关注的是
+                  <span className="highlight-marker">Capture LED 指示灯</span>
+                  的引入，它是核心的“信任设计（
+                  <span className="highlight-marker">Privacy by Design</span>
+                  ）”，通过物理反馈重建了 AI 硬件与公共环境间的伦理契约。这种设计让交互逻辑从“低头屏显”回归到“抬头直觉”，定义了新一代 AI Agent 的感知边界。
+                </p>
+              </div>
+
+              <div className="md:col-span-7">
+                <img src={hardwareArch} alt="核心组件关系图" className="w-full max-w-full h-auto object-contain" />
+                <div className="mt-4 text-xs leading-relaxed text-white/55">
+                  <span className="text-white/75 text-sm leading-[1.5]">核心组件关系图</span>
+                  <span className="block mt-2 text-white/45">来源：根据 Meta 公开信息整理</span>
+                </div>
+              </div>
+            </div>
+              </div>
+            </div>
+          </section>
+
+          <SectionDivider />
+
+          {/* 04 核心技术与参数 */}
+          <section id="specs" className="scroll-mt-28">
+            <div className="relative rounded-2xl border border-white/10 bg-white/[0.03] p-6 md:p-8">
+              <SectionNumberDecoration no="04" />
+              <div className="relative space-y-8">
+                <SectionLabel no="04" label="核心技术与参数" />
+                <Hairline />
+            <p className="text-sm text-white/75">无屏 AI 硬件最小闭环：<span className="text-white">看（camera）+ 听/说（mic & speaker）+ 低功耗算力（AR1）</span>。Gen 2 较初代续航翻倍、画质升级至 3K。</p>
             <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
               <div className="flex items-start justify-between gap-6">
                 <div>
-                  <div className="text-xs tracking-[0.28em] text-white/55">SPEC TABLE</div>
-                  <h3 className="mt-2 text-xl">技术参数表（课堂展示版）</h3>
+                  <div className="text-xs tracking-[0.28em] text-white/55">GEN 2 参数表</div>
+                  <h3 className="mt-2 text-xl">技术参数（Ray-Ban Meta Gen 2）</h3>
                 </div>
-                <GlowBadge>从体验维度翻译参数</GlowBadge>
+                <GlowBadge>美国 $379 起</GlowBadge>
               </div>
-
               <div className="mt-5 overflow-x-auto">
-                <table className="w-full min-w-[720px] border-separate border-spacing-0 text-left text-sm">
+                <table className="w-full min-w-[640px] border-separate border-spacing-0 text-left text-sm">
                   <thead>
                     <tr className="text-xs tracking-[0.22em] text-white/55">
                       <th className="border-b border-white/10 px-4 py-3">模块</th>
-                      <th className="border-b border-white/10 px-4 py-3">关键参数（公开/可引用）</th>
-                      <th className="border-b border-white/10 px-4 py-3">设计/体验含义</th>
+                      <th className="border-b border-white/10 px-4 py-3">关键参数</th>
+                      <th className="border-b border-white/10 px-4 py-3">体验含义</th>
                     </tr>
                   </thead>
                   <tbody className="text-white/75">
-                    <tr>
-                      <td className="border-b border-white/10 px-4 py-4 text-white">相机</td>
-                      <td className="border-b border-white/10 px-4 py-4">12MP 超广角；1080p 视频（最长 60 秒）</td>
-                      <td className="border-b border-white/10 px-4 py-4">第一人称内容生产的基础单元</td>
-                    </tr>
-                    <tr>
-                      <td className="border-b border-white/10 px-4 py-4 text-white">音频输入</td>
-                      <td className="border-b border-white/10 px-4 py-4">五麦克风阵列；沉浸式录音（immersive audio）</td>
-                      <td className="border-b border-white/10 px-4 py-4">提高“声音可信度”，降低后期成本</td>
-                    </tr>
-                    <tr>
-                      <td className="border-b border-white/10 px-4 py-4 text-white">音频输出</td>
-                      <td className="border-b border-white/10 px-4 py-4">开放式扬声器（open‑ear）</td>
-                      <td className="border-b border-white/10 px-4 py-4">保留环境感知，适合日常/运动场景</td>
-                    </tr>
-                    <tr>
-                      <td className="border-b border-white/10 px-4 py-4 text-white">芯片</td>
-                      <td className="border-b border-white/10 px-4 py-4">Snapdragon AR1 Gen1</td>
-                      <td className="border-b border-white/10 px-4 py-4">低功耗 + 更快处理，支撑全天候使用</td>
-                    </tr>
-                    <tr>
-                      <td className="px-4 py-4 text-white">续航/充电</td>
-                      <td className="px-4 py-4">充电盒最多 8 次额外充电（总计 36 小时使用）</td>
-                      <td className="px-4 py-4">把“补能”从每日焦虑变成偶发动作</td>
-                    </tr>
+                    <tr><td className="border-b border-white/10 px-4 py-3 text-white">相机</td><td className="border-b border-white/10 px-4 py-3"><span className="highlight-marker">12MP 超广角</span>；<span className="highlight-marker">3K 录制</span>，1200p@60fps</td><td className="border-b border-white/10 px-4 py-3"><span className="highlight-marker">第一人称内容生产</span></td></tr>
+                    <tr><td className="border-b border-white/10 px-4 py-3 text-white">音频</td><td className="border-b border-white/10 px-4 py-3"><span className="highlight-marker">五麦</span> + 双开放式扬声器</td><td className="border-b border-white/10 px-4 py-3">定向拾音、沉浸式录音；户外听清仍为痛点</td></tr>
+                    <tr><td className="border-b border-white/10 px-4 py-3 text-white">芯片</td><td className="border-b border-white/10 px-4 py-3"><span className="highlight-marker">Snapdragon AR1 Gen1</span> + 恒玄 BES2700</td><td className="border-b border-white/10 px-4 py-3">低功耗、<span className="highlight-marker">实时交互</span></td></tr>
+                    <tr><td className="border-b border-white/10 px-4 py-3 text-white">续航</td><td className="border-b border-white/10 px-4 py-3">典型 8h；<span className="highlight-marker">20 分钟快充约 50%</span>；充电盒约 48h 额外</td><td className="border-b border-white/10 px-4 py-3">补能从每日焦虑转为偶发</td></tr>
+                    <tr><td className="px-4 py-3 text-white">其他</td><td className="px-4 py-3">32GB、IPX4、Wi‑Fi 6、蓝牙 5.3；<span className="highlight-marker">约 52g</span></td><td className="px-4 py-3">接近普通眼镜佩戴感</td></tr>
                   </tbody>
                 </table>
               </div>
-
-              <div className="mt-3 text-xs text-white/45">注：参数口径来自 Meta Newsroom（2023-09）发布稿。</div>
+              <div className="mt-3 text-xs text-white/45">数据来源：Meta 官方、Omdia、公开评测。</div>
+            </div>
+              </div>
             </div>
           </section>
 
-          {/* AI */}
-          <section id="ai" className="scroll-mt-28 space-y-8">
-            <SectionLabel no="03" label="AI 应用点（重点分析）" />
-            <Hairline />
+          <SectionDivider />
+
+          {/* 05 AI 功能与应用点 */}
+          <section id="ai" className="scroll-mt-28">
+            <div className="relative rounded-2xl border border-white/10 bg-white/[0.03] p-6 md:p-8">
+              <SectionNumberDecoration no="05" />
+              <div className="relative space-y-8">
+                <SectionLabel no="05" label="AI 功能与应用点" />
+                <Hairline />
 
             <div className="grid gap-8">
               <div className="space-y-5">
@@ -473,6 +530,8 @@ export default function Home({ targetSection }: HomeProps) {
                 </ul>
               </div>
 
+              <MediaFigureByFile filename={'Meta AI app for managing Ray-ban Meta AI glasses.webp'} caption={'Meta AI 管理 Ray-Ban Meta 眼镜应用'} />
+
               <div className="space-y-5">
                 <h2 className="text-2xl md:text-3xl">智能声场：内容可信度的隐形变量</h2>
                 <p className="text-sm leading-relaxed text-white/75">
@@ -487,14 +546,20 @@ export default function Home({ targetSection }: HomeProps) {
                 </div>
               </div>
             </div>
+              </div>
+            </div>
           </section>
 
-          {/* Design */}
-          <section id="design" className="scroll-mt-28 space-y-8">
-            <SectionLabel no="04" label="设计创新点（工设视角）" />
-            <Hairline />
+          <SectionDivider />
 
-            <div className="grid gap-8 md:grid-cols-2">
+          {/* 06 功能与形态设计创新 */}
+          <section id="design" className="scroll-mt-28">
+            <div className="relative rounded-2xl border border-white/10 bg-white/[0.03] p-6 md:p-8">
+              <SectionNumberDecoration no="06" />
+              <div className="relative space-y-8">
+                <SectionLabel no="06" label="功能与形态设计创新" />
+                <Hairline />
+                <div className="grid gap-8 md:grid-cols-2">
               <div className="space-y-5">
                 <h2 className="text-2xl md:text-3xl">功能形式创新：无感化设计</h2>
                 <p className="text-sm leading-relaxed text-white/75">
@@ -521,68 +586,174 @@ export default function Home({ targetSection }: HomeProps) {
                 </div>
               </div>
             </div>
+              </div>
+            </div>
           </section>
 
-          {/* Industry */}
-          <section id="industry" className="scroll-mt-28 space-y-8">
-            <SectionLabel no="05" label="产业分析" />
-            <Hairline />
+          <SectionDivider />
 
-            <div className="grid gap-8 md:grid-cols-2">
+          {/* 07 主要应用场景 */}
+          <section id="scenarios" className="scroll-mt-28">
+            <div className="relative rounded-2xl border border-white/10 bg-white/[0.03] p-6 md:p-8">
+              <SectionNumberDecoration no="07" />
+              <div className="relative space-y-8">
+                <SectionLabel no="07" label="主要应用场景" />
+                <Hairline />
+                <h2 className="text-2xl md:text-3xl">从用例到可扩展市场</h2>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+              <div className="rounded-2xl border border-white/10 bg-black/30 p-5">
+                <div className="text-xs tracking-[0.22em] text-white/55">01</div>
+                <div className="mt-2 text-white font-medium">日常随拍 / Vlog·直播</div>
+                <div className="mt-2 text-sm text-white/65">POV 拍摄、免手持操控；与 Meta 社交平台打通</div>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-black/30 p-5">
+                <div className="text-xs tracking-[0.22em] text-white/55">02</div>
+                <div className="mt-2 text-white font-medium">语音助手与即时翻译</div>
+                <div className="mt-2 text-sm text-white/65">差旅、会议、跨境沟通；背景能力，减少掏手机</div>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-black/30 p-5">
+                <div className="text-xs tracking-[0.22em] text-white/55">03</div>
+                <div className="mt-2 text-white font-medium">音乐 / 通话 / 通知</div>
+                <div className="mt-2 text-sm text-white/65">开放式音频，保留环境感知；通勤与办公</div>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-black/30 p-5">
+                <div className="text-xs tracking-[0.22em] text-white/55">04</div>
+                <div className="mt-2 text-white font-medium">无障碍与户外</div>
+                <div className="mt-2 text-sm text-white/65">Be My Eyes POV 通话；Oakley 线覆盖运动户外</div>
+              </div>
+            </div>
+            <div className="grid gap-6 md:grid-cols-2">
+                <MediaFigureByFile filename={'翻译演示.webp'} caption={'翻译演示（应用场景）'} />
+                <MediaFigureByFile filename={'Hands-free communication.webp'} caption={'免提通话（应用场景）'} />
+              </div>
+              </div>
+            </div>
+          </section>
+
+          <SectionDivider />
+
+          {/* 08 市场反响与关键指标 */}
+          <section id="market" className="scroll-mt-28">
+            <div className="relative rounded-2xl border border-white/10 bg-white/[0.03] p-6 md:p-8">
+              <SectionNumberDecoration no="08" />
+              <div className="relative space-y-8">
+                <SectionLabel no="08" label="市场反响与关键指标" />
+                <Hairline />
+                <div className="grid gap-6 md:grid-cols-2">
+              <div className="space-y-4">
+                <h2 className="text-2xl md:text-3xl">销量与市占</h2>
+                <p className="text-sm text-white/75">2025 年销量超 700 万副，同比增超 2 倍；上半年为去年同期三倍以上。累计早前突破 200 万台，为全球首款破 200 万台的智能眼镜。市占约 85%（Omdia）。</p>
+                <p className="text-sm text-white/75">以 200 万副量级估算销售收入超 6 亿美元；消费者兴趣持续升温，AI 功能推送后销量呈倍数增长。</p>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="rounded-2xl border border-white/10 bg-black/30 p-4 text-center">
+                  <div className="text-2xl font-bold text-white">700 万+</div>
+                  <div className="mt-1 text-xs text-white/60">2025 年销量（副）</div>
+                </div>
+                <div className="rounded-2xl border border-white/10 bg-black/30 p-4 text-center">
+                  <div className="text-2xl font-bold text-white">85%</div>
+                  <div className="mt-1 text-xs text-white/60">全球市占（Omdia）</div>
+                </div>
+                <div className="rounded-2xl border border-white/10 bg-black/30 p-4 text-center col-span-2">
+                  <div className="text-sm text-white/80">产能规划：2026 年底年产能 1000 万台；无屏智能眼镜 2025 年增速约 +247%（IDC）</div>
+                </div>
+              </div>
+            </div>
+              </div>
+            </div>
+          </section>
+
+          <SectionDivider />
+
+          {/* 09 产业链与相关企业 */}
+          <section id="industry" className="scroll-mt-28">
+            <div className="relative rounded-2xl border border-white/10 bg-white/[0.03] p-6 md:p-8">
+              <SectionNumberDecoration no="09" />
+              <div className="relative space-y-8">
+                <SectionLabel no="09" label="产业链与相关企业" />
+                <Hairline />
+                <div className="grid gap-8 md:grid-cols-2">
               <div className="space-y-5">
-                <h2 className="text-2xl md:text-3xl">产业链图谱：硬件×模型×渠道</h2>
-                <p className="text-sm leading-relaxed text-white/75">
-                  Ray‑Ban Meta 的产业协作结构更接近“平台型产品”：芯片提供低功耗计算边界，眼镜企业负责制造与渠道，互联网公司提供模型与分发。任何一环薄弱，都会导致体验与规模化失败。
-                </p>
+                <h2 className="text-2xl md:text-3xl">上中下游结构</h2>
+                <p className="text-sm leading-relaxed text-white/75">芯片、光学、声学、结构到整机，中国供应链覆盖上游与中游核心环节；销量破 200 万副后产业链已规模化，计划 2026 年底年产能 1000 万台。</p>
                 <ul className="space-y-2 text-sm text-white/75">
-                  <li>• Qualcomm：Snapdragon AR1 Gen1（Meta Newsroom, 2023-09）</li>
-                  <li>• EssilorLuxottica：制造/渠道（Vision Monday, 2025-02；EssilorLuxottica FY2024）</li>
-                  <li>• Meta：Meta AI（Built with Llama 3）（Meta Newsroom, 2024-04）</li>
+                  <li><span className="text-white">上游：</span>高通、恒玄、佰维、舜宇、水晶光电、德赛/飞毛腿、歌尔微、长盈、世运电路等</li>
+                  <li><span className="text-white">中游：</span>歌尔股份（光波导+整机）、蓝思科技、立讯精密</li>
+                  <li><span className="text-white">下游：</span>Meta（AI/生态）、EssilorLuxottica（品牌/渠道）</li>
                 </ul>
               </div>
-
-              <Figure
-                src={industryChain}
-                caption="产业链与应用关系图（课程自绘）"
-                credit="根据公开资料整理"
-              />
+              <Figure src={industryChain} caption="产业链与应用关系图" credit="根据公开资料整理" />
             </div>
-
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
-              <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                <div>
-                  <div className="text-xs tracking-[0.28em] text-white/55">APPLICATION DOMAINS</div>
-                  <h3 className="mt-2 text-xl">应用领域：从用例到可扩展市场</h3>
-                </div>
-                <div className="max-w-2xl text-sm leading-relaxed text-white/75">
-                  <div className="grid gap-3 md:grid-cols-3">
-                    <div className="rounded-xl border border-white/10 bg-black/30 p-4">
-                      <div className="text-xs tracking-[0.22em] text-white/55">01</div>
-                      <div className="mt-2 text-white">Vlog/直播创作</div>
-                      <div className="mt-2 text-xs text-white/55">POV + 免手持操控</div>
-                    </div>
-                    <div className="rounded-xl border border-white/10 bg-black/30 p-4">
-                      <div className="text-xs tracking-[0.22em] text-white/55">02</div>
-                      <div className="mt-2 text-white">无障碍辅助</div>
-                      <div className="mt-2 text-xs text-white/55">Be My Eyes POV 通话</div>
-                    </div>
-                    <div className="rounded-xl border border-white/10 bg-black/30 p-4">
-                      <div className="text-xs tracking-[0.22em] text-white/55">03</div>
-                      <div className="mt-2 text-white">实时翻译</div>
-                      <div className="mt-2 text-xs text-white/55">旅行与跨语言社交</div>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </section>
 
-          {/* Outlook */}
-          <section id="outlook" className="scroll-mt-28 space-y-8">
-            <SectionLabel no="06" label="总结与展望" />
-            <Hairline />
+          <SectionDivider />
 
-            <div className="rounded-[28px] border border-white/10 bg-white/5 p-8 md:p-10">
+          {/* 10 用户痛点与局限 */}
+          <section id="pain" className="scroll-mt-28">
+            <div className="relative rounded-2xl border border-white/10 bg-white/[0.03] p-6 md:p-8">
+              <SectionNumberDecoration no="10" />
+              <div className="relative space-y-8">
+                <SectionLabel no="10" label="用户痛点与局限" />
+                <Hairline />
+                <div className="grid gap-6 md:grid-cols-2">
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+                <h3 className="text-lg font-semibold text-white">续航与佩戴</h3>
+                <p className="mt-2 text-sm text-white/75">约 81% 用户提及续航；多数 3–4 小时需充电，Gen 2 约 8h 仍不足全天。鼻托压感明显，欧美版型在亚洲鼻梁上适配欠佳。</p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+                <h3 className="text-lg font-semibold text-white">AI 与音频</h3>
+                <p className="mt-2 text-sm text-white/75">开放式扬声器在户外听不清；AI 以音频为主、形式单一。国内 Meta AI 不可用、中文支持弱，横评多不推荐国内用户首选。</p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-4 md:col-span-2">
+                <p className="text-sm text-white/75">隐私与社交：头顶/前方摄像头引发顾虑；录制指示灯缓解但未完全消除焦虑。行业层面电商退货率约 30%–50%。</p>
+              </div>
+            </div>
+              </div>
+            </div>
+          </section>
+
+          <SectionDivider />
+
+          {/* 11 竞品定位与差异 */}
+          <section id="competitive" className="scroll-mt-28">
+            <div className="relative rounded-2xl border border-white/10 bg-white/[0.03] p-6 md:p-8">
+              <SectionNumberDecoration no="11" />
+              <div className="relative space-y-8">
+                <SectionLabel no="11" label="竞品定位与差异" />
+                <Hairline />
+                <div className="overflow-x-auto">
+              <table className="w-full min-w-[640px] border-separate border-spacing-0 text-sm">
+                <thead>
+                  <tr className="text-xs tracking-[0.2em] text-white/55">
+                    <th className="border-b border-white/10 px-4 py-3 text-left">产品</th>
+                    <th className="border-b border-white/10 px-4 py-3 text-left">形态/卖点</th>
+                    <th className="border-b border-white/10 px-4 py-3 text-left">简要对比</th>
+                  </tr>
+                </thead>
+                <tbody className="text-white/75">
+                  <tr><td className="border-b border-white/10 px-4 py-3 text-white">Ray-Ban Meta</td><td className="border-b border-white/10 px-4 py-3">无屏+语音；时尚品牌</td><td className="border-b border-white/10 px-4 py-3">市占第一；国内 AI 缺失、佩戴适配弱</td></tr>
+                  <tr><td className="border-b border-white/10 px-4 py-3 text-white">千问 G1 / 夸克</td><td className="border-b border-white/10 px-4 py-3">40g、换电；国补后约 1997 元起</td><td className="border-b border-white/10 px-4 py-3">本土化功能强；国产代表</td></tr>
+                  <tr><td className="border-b border-white/10 px-4 py-3 text-white">Rokid</td><td className="border-b border-white/10 px-4 py-3">光波导+摄像头</td><td className="border-b border-white/10 px-4 py-3">横评最均衡；显示识别、支付等成熟</td></tr>
+                  <tr><td className="px-4 py-3 text-white">小米 / 雷鸟 / 魅族</td><td className="px-4 py-3">性价比、生态绑定</td><td className="px-4 py-3">预算友好；续航均不足一天为行业共性</td></tr>
+                </tbody>
+              </table>
+            </div>
+              </div>
+            </div>
+          </section>
+
+          <SectionDivider />
+
+          {/* 12 小结与趋势 */}
+          <section id="summary" className="scroll-mt-28">
+            <div className="relative rounded-2xl border border-white/10 bg-white/[0.03] p-6 md:p-8">
+              <SectionNumberDecoration no="12" />
+              <div className="relative space-y-8">
+                <SectionLabel no="12" label="小结与趋势" />
+                <Hairline />
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-8 md:p-10">
               <div className="grid gap-8 md:grid-cols-[1fr_320px]">
                 <div className="space-y-5">
                   <h2 className="text-3xl md:text-4xl">从“眼镜”到“AI 饰品化”</h2>
@@ -617,12 +788,19 @@ export default function Home({ targetSection }: HomeProps) {
                 </div>
               </div>
             </div>
+              </div>
+            </div>
           </section>
 
-          {/* Sources */}
-          <section id="sources" className="scroll-mt-28 space-y-8">
-            <SectionLabel no="07" label="参考来源" />
-            <Hairline />
+          <SectionDivider />
+
+          {/* 13 参考来源 */}
+          <section id="sources" className="scroll-mt-28">
+            <div className="relative rounded-2xl border border-white/10 bg-white/[0.03] p-6 md:p-8">
+              <SectionNumberDecoration no="13" />
+              <div className="relative space-y-8">
+                <SectionLabel no="13" label="参考来源" />
+                <Hairline />
 
             <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
               <div className="mb-4 rounded-2xl border border-white/6 bg-black/20 p-3 text-xs text-white/60">
@@ -678,6 +856,8 @@ export default function Home({ targetSection }: HomeProps) {
             <footer className="pt-4 text-xs text-white/45">
               © 2026 课堂展示用。图片与引用归原作者/机构所有。
             </footer>
+              </div>
+            </div>
           </section>
         </div>
       </main>
@@ -686,8 +866,8 @@ export default function Home({ targetSection }: HomeProps) {
       <div className="md:hidden fixed bottom-4 left-4 right-4 z-30">
         <div className="flex items-center justify-between rounded-2xl border border-white/10 bg-[oklch(0.145_0_0_/_0.72)] px-4 py-3 backdrop-blur">
           <div className="text-xs tracking-[0.22em] text-white/65">目录</div>
-          <div className="flex gap-2 overflow-x-auto">
-            {nav.slice(0, 6).map((it) => (
+          <div className="flex gap-2 overflow-x-auto pb-1">
+            {nav.slice(0, 8).map((it) => (
               <a
                 key={it.id}
                 href={`/#/${it.id}`}
