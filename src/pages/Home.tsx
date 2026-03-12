@@ -352,10 +352,10 @@ export default function Home({ targetSection }: HomeProps) {
                   <div className="text-sm text-white/75">
                     <div>· 核心职能：负责产品的“智能化”定义。</div>
                     <div className="mt-2">· 具体作用：</div>
-                    <ol className="mt-1 list-decimal list-inside text-white/75">
-                      <li>AI 算力注入：将 Llama 3 大模型集成至终端，提供多模态交互（语音/视觉）与云端推理能力，使眼镜具备理解环境的能力。</li>
-                      <li className="mt-1">软件生态构建：提供操作系统（OS）及应用分发平台，确保硬件拥有持续的内容更新与服务支持。</li>
-                      <li className="mt-1">数据闭环：通过第一视角采集数据，反哺 AI 模型训练，形成技术迭代壁垒。</li>
+                    <ol className="mt-1 list-decimal list-outside pl-6 text-white/75">
+                      <li className="mb-2">AI 算力注入：将 Llama 3 大模型集成至终端，提供多模态交互（语音/视觉）与云端推理能力，使眼镜具备理解环境的能力。</li>
+                      <li className="mb-2">软件生态构建：提供操作系统（OS）及应用分发平台，确保硬件拥有持续的内容更新与服务支持。</li>
+                      <li className="mb-2">数据闭环：通过第一视角采集数据，反哺 AI 模型训练，形成技术迭代壁垒。</li>
                     </ol>
                     <div className="mt-2">· 关键价值：解决了传统眼镜“功能单一、缺乏交互”的问题，赋予产品计算属性。</div>
                   </div>
@@ -368,10 +368,10 @@ export default function Home({ targetSection }: HomeProps) {
                   <div className="text-sm text-white/75">
                     <div>· 核心职能：负责产品的“物理化”落地与商业化。</div>
                     <div className="mt-2">· 具体作用：</div>
-                    <ol className="mt-1 list-decimal list-inside text-white/75">
-                      <li>工业设计与光学整合：利用 Ray-Ban 经典版型与光学专长，将摄像头、电池等电子元件微型化并隐藏，确保佩戴舒适度与美观性。</li>
-                      <li className="mt-1">规模化制造：解决消费电子难以兼顾时尚品控与大规模生产的难题。</li>
-                      <li className="mt-1">渠道渗透：开放全球零售网络及专业验光渠道，降低用户尝试门槛，解决智能眼镜“购买难、配镜难”的痛点。</li>
+                    <ol className="mt-1 list-decimal list-outside pl-6 text-white/75">
+                      <li className="mb-2">工业设计与光学整合：利用 Ray-Ban 经典版型与光学专长，将摄像头、电池等电子元件微型化并隐藏，确保佩戴舒适度与美观性。</li>
+                      <li className="mb-2">规模化制造：解决消费电子难以兼顾时尚品控与大规模生产的难题。</li>
+                      <li className="mb-2">渠道渗透：开放全球零售网络及专业验光渠道，降低用户尝试门槛，解决智能眼镜“购买难、配镜难”的痛点。</li>
                     </ol>
                     <div className="mt-2">· 关键价值：解决了科技产品“形态怪异、渠道受限”的问题，赋予产品消费属性。</div>
                   </div>
