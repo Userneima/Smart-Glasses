@@ -349,15 +349,15 @@ export default function Home({ targetSection }: HomeProps) {
                     <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center text-white font-semibold">M</div>
                     <span className="text-lg font-semibold text-white">Meta：提供智能核心与生态闭环</span>
                   </div>
-                  <div className="text-sm text-white/75">
+                  <div className="text-sm text-white/75 leading-[1.8]">
                     <div>· 核心职能：负责产品的“智能化”定义。</div>
                     <div className="mt-2">· 具体作用：</div>
-                    <ol className="mt-1 list-decimal list-outside pl-6 text-white/75">
-                      <li className="mb-2">AI 算力注入：将 Llama 3 大模型集成至终端，提供多模态交互（语音/视觉）与云端推理能力，使眼镜具备理解环境的能力。</li>
-                      <li className="mb-2">软件生态构建：提供操作系统（OS）及应用分发平台，确保硬件拥有持续的内容更新与服务支持。</li>
-                      <li className="mb-2">数据闭环：通过第一视角采集数据，反哺 AI 模型训练，形成技术迭代壁垒。</li>
+                    <ol className="mt-1 list-decimal list-outside pl-10 text-white/75">
+                      <li className="mb-3"><span className="highlight-marker">AI 算力注入</span>：将 <span className="highlight-marker">Llama 3</span> 大模型集成至终端，提供多模态交互（语音/视觉）与云端推理能力，使眼镜具备理解环境的能力。</li>
+                      <li className="mb-3">软件生态构建：提供 <span className="highlight-marker">操作系统（OS）</span> 及应用分发平台，确保硬件拥有持续的内容更新与服务支持。</li>
+                      <li className="mb-3">数据闭环：通过 <span className="highlight-marker">第一视角采集数据</span>，反哺 AI 模型训练，形成技术迭代壁垒。</li>
                     </ol>
-                    <div className="mt-2">· 关键价值：解决了传统眼镜“功能单一、缺乏交互”的问题，赋予产品计算属性。</div>
+                    <div className="mt-2">· 关键价值：解决了传统眼镜“功能单一、缺乏交互”的问题，<span className="highlight-marker">赋予产品计算属性</span>。</div>
                   </div>
                 </div>
                 <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
@@ -365,15 +365,15 @@ export default function Home({ targetSection }: HomeProps) {
                     <div className="h-10 w-10 rounded-full bg-white/10 flex items-center justify-center text-white font-semibold">L</div>
                     <span className="text-lg font-semibold text-white">EssilorLuxottica：提供硬件载体与市场通道</span>
                   </div>
-                  <div className="text-sm text-white/75">
+                  <div className="text-sm text-white/75 leading-[1.8]">
                     <div>· 核心职能：负责产品的“物理化”落地与商业化。</div>
                     <div className="mt-2">· 具体作用：</div>
-                    <ol className="mt-1 list-decimal list-outside pl-6 text-white/75">
-                      <li className="mb-2">工业设计与光学整合：利用 Ray-Ban 经典版型与光学专长，将摄像头、电池等电子元件微型化并隐藏，确保佩戴舒适度与美观性。</li>
-                      <li className="mb-2">规模化制造：解决消费电子难以兼顾时尚品控与大规模生产的难题。</li>
-                      <li className="mb-2">渠道渗透：开放全球零售网络及专业验光渠道，降低用户尝试门槛，解决智能眼镜“购买难、配镜难”的痛点。</li>
+                    <ol className="mt-1 list-decimal list-outside pl-10 text-white/75">
+                      <li className="mb-3"><span className="highlight-marker">工业设计与光学整合</span>：利用 Ray-Ban 经典版型与光学专长，将摄像头、电池等电子元件<span className="highlight-marker">微型化并隐藏</span>，确保佩戴舒适度与美观性。</li>
+                      <li className="mb-3">规模化制造：解决消费电子难以兼顾 <span className="highlight-marker">时尚品控与大规模生产</span> 的难题。</li>
+                      <li className="mb-3">渠道渗透：开放全球零售网络及专业<span className="highlight-marker">验光渠道</span>，降低用户尝试门槛，解决智能眼镜“购买难、配镜难”的痛点。</li>
                     </ol>
-                    <div className="mt-2">· 关键价值：解决了科技产品“形态怪异、渠道受限”的问题，赋予产品消费属性。</div>
+                    <div className="mt-2">· 关键价值：解决了科技产品“形态怪异、渠道受限”的问题，<span className="highlight-marker">赋予产品消费属性</span>。</div>
                   </div>
                 </div>
               </div>
