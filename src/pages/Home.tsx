@@ -745,6 +745,9 @@ export default function Home({ targetSection }: HomeProps) {
               </div>
               <Figure src={industryChain} caption="产业链与应用关系图" credit="根据公开资料整理" />
             </div>
+            <div className="mt-6">
+              <Figure src={'/report_media/产业链图谱.png'} caption={'产业链图谱'} credit={'艾瑞咨询'} />
+            </div>
               </div>
             </div>
           </section>
