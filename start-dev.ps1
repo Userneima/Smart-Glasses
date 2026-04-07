@@ -4,8 +4,8 @@
 $projectDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
 Set-Location $projectDir
 
-# 端口和 URL（Vite 默认 5173）
-$port = 5173
+# 端口和 URL（与 vite.config.ts 中 server.port 保持一致）
+$port = 5185
 $url = "http://localhost:$port/"
 
 # 选择包管理器并在新窗口中启动开发服务器（保持可见）

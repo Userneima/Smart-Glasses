@@ -4,5 +4,5 @@ cd /d "%~dp0"
 start "Dev Server" cmd /k "pnpm run dev"
 REM 等待 5 秒再打开浏览器（若服务器尚未就绪请刷新页面）
 timeout /t 5 /nobreak >nul
-start "" http://localhost:5173
+start "" http://localhost:5185
 pause
