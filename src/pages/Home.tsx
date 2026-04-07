@@ -6,7 +6,7 @@ Design manifesto (commitment):
 - Signature motifs: hairline rules, numbered sections, "signal" badges, SVG diagrams
 */
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, type ReactNode } from "react";
 import hero from "@/assets/hero.png";
 import camera12mp from "@/assets/camera_12mp.jpeg";
 import lookAndAsk from "@/assets/look_and_ask.svg";
@@ -14,6 +14,19 @@ import hardwareArch from "@/assets/hardware_arch.svg";
 import industryChain from "@/assets/industry_chain.svg";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import {
+  Award,
+  Battery,
+  Bot,
+  ChevronDown,
+  Crown,
+  Glasses,
+  Layers,
+  Rocket,
+  ShieldAlert,
+  TrendingUp,
+} from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 interface HomeProps {
   targetSection?: string;
@@ -125,6 +138,40 @@ function MediaFigureByFile({
         <span className="block pt-1 text-white/45">来源：Meta Newsroom</span>
       </figcaption>
     </figure>
+  );
+}
+
+/** 痛点模块：定长扫描行（标题 + 单行结论，控制信息密度） */
+function PainScanRow({
+  label,
+  children,
+}: {
+  label: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className="rounded-lg border border-white/10 bg-black/25 px-3 py-2.5">
+      <div className="text-[10px] font-medium tracking-[0.22em] text-white/45">{label}</div>
+      <p className="mt-1.5 min-h-[3.25rem] text-sm leading-snug text-white/82">{children}</p>
+    </div>
+  );
+}
+
+/** 06 设计分析：统一层级行（与痛点模块视觉闭环） */
+function DesignLogicRow({
+  label,
+  children,
+  accentClass = "text-white/45",
+}: {
+  label: string;
+  children: ReactNode;
+  accentClass?: string;
+}) {
+  return (
+    <div className="rounded-lg border border-white/10 bg-black/25 px-3 py-2.5">
+      <div className={cn("text-[10px] font-medium tracking-[0.22em]", accentClass)}>{label}</div>
+      <p className="mt-1.5 min-h-[1.6rem] text-sm leading-snug text-white/80">{children}</p>
+    </div>
   );
 }
 
@@ -653,33 +700,73 @@ export default function Home({ targetSection }: HomeProps) {
               <div className="relative space-y-8">
                 <SectionLabel no="06" label="功能与形态设计创新" />
                 <Hairline />
-                <div className="grid gap-8 md:grid-cols-2">
-              <div className="space-y-5">
-                <h2 className="text-2xl md:text-3xl">功能形式创新：无感化设计</h2>
-                <p className="text-sm leading-relaxed text-white/75">
-                  “无感化（invisible computing）”的核心不是隐藏所有痕迹，而是在整体造型、材料与细节节奏上，把传感器/扬声器/麦克风变成一种可被接受的“功能肌理”。用户获得的是“仍然像戴 Ray‑Ban”的身份叙事，而不是“我在戴一台设备”。
+                <p className="text-sm leading-relaxed text-white/70 md:whitespace-nowrap">
+                  <span className="font-medium text-emerald-300">双轮驱动</span>
+                  ：形态创新解决「愿意戴」，伦理设计解决「敢在公共场合戴」——二者共同构成 Ray‑Ban Meta 的可穿戴产品逻辑闭环。
                 </p>
-                <div className="rounded-2xl border border-white/10 bg-black/30 p-5 text-sm leading-relaxed text-white/75">
-                  <div className="text-xs tracking-[0.28em] text-white/55">DESIGN STRATEGY</div>
-                  <p className="mt-3">
-                    用成熟的时尚符号降低新硬件的心理门槛，缩短从尝鲜到日常化的 adoption 曲线。
-                  </p>
-                </div>
-              </div>
+                <div className="grid gap-4 md:grid-cols-2 md:items-stretch">
+                  {/* 维度 A：形态与无感化 */}
+                  <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-2xl border border-emerald-300/20 bg-emerald-400/[0.06]">
+                    <div className="flex flex-1 flex-col p-5">
+                      <div className="flex items-center gap-2 text-emerald-100/90">
+                        <Glasses size={18} aria-hidden />
+                        <span className="text-xs tracking-[0.2em]">维度 A · 形态与功能</span>
+                      </div>
+                      <h2 className="mt-2 text-lg font-semibold text-white md:text-xl">
+                        <span className="text-emerald-300">无感化</span>（Invisible Computing）
+                      </h2>
+                      <div className="mt-4 flex flex-1 flex-col gap-2.5">
+                        <DesignLogicRow label="核心创新" accentClass="text-emerald-200/75">
+                          将算力与传感「藏进」经典镜架语言：先确立 <span className="font-semibold text-emerald-300">Ray‑Ban 身份</span>，再叠加智能。
+                        </DesignLogicRow>
+                        <DesignLogicRow label="产品细节（Ray‑Ban Meta）" accentClass="text-emerald-200/75">
+                          Wayfarer / Headliner 等经典廓形；镜腿集成 <span className="text-emerald-300">五麦克风阵列</span> 与开放式扬声器；Remix 提供大量镜框镜片组合，降低「设备感」。
+                        </DesignLogicRow>
+                        <DesignLogicRow label="用户价值" accentClass="text-emerald-200/75">
+                          用户获得「仍像戴 Ray‑Ban」的社交形象，而非「戴了一台相机」的心理负担。
+                        </DesignLogicRow>
+                        <DesignLogicRow label="行业意义" accentClass="text-emerald-200/75">
+                          为智能眼镜确立 <span className="text-emerald-300">「先眼镜、后智能」</span> 的工业设计路径，区别于纯极客硬件。
+                        </DesignLogicRow>
+                      </div>
+                    </div>
+                    <div className="mt-auto shrink-0 border-t border-emerald-200/20 bg-emerald-300/10 px-5 py-3 text-sm text-emerald-50/95">
+                      <span className="text-white/90">设计策略：</span>
+                      借成熟时尚符号降低新硬件心理门槛，缩短尝鲜→日常佩戴的 adoption 曲线。
+                    </div>
+                  </div>
 
-              <div className="space-y-5">
-                <h2 className="text-2xl md:text-3xl">社会心理设计：隐私焦虑的可见化治理</h2>
-                <p className="text-sm leading-relaxed text-white/75">
-                  录制指示灯（capture LED）是面向“被拍者”的交互设计：把“是否在拍”外显化，降低偷拍疑虑与社会张力。
-                </p>
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-5 text-sm leading-relaxed text-white/75">
-                  <div className="text-xs tracking-[0.28em] text-white/55">TRUST FEATURE</div>
-                  <p className="mt-3">
-                    这不是功能堆叠，而是信任机制：把隐私/伦理风险从事后争议前移到当下可感知提示。
-                  </p>
+                  {/* 维度 B：伦理与信任 */}
+                  <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-2xl border border-violet-300/20 bg-violet-400/[0.06]">
+                    <div className="flex flex-1 flex-col p-5">
+                      <div className="flex items-center gap-2 text-violet-100/90">
+                        <ShieldAlert size={18} aria-hidden />
+                        <span className="text-xs tracking-[0.2em]">维度 B · 伦理与心理</span>
+                      </div>
+                      <h2 className="mt-2 text-lg font-semibold text-white md:text-xl">
+                        <span className="text-violet-300">可见化治理</span>（Trust by Disclosure）
+                      </h2>
+                      <div className="mt-4 flex flex-1 flex-col gap-2.5">
+                        <DesignLogicRow label="核心创新" accentClass="text-violet-200/75">
+                          把「是否在录制」从黑箱变为<span className="font-semibold text-violet-300">可被旁观察觉</span>的状态信号，服务被拍者与旁观者。
+                        </DesignLogicRow>
+                        <DesignLogicRow label="产品细节（Ray‑Ban Meta）" accentClass="text-violet-200/75">
+                          镜框外侧 <span className="text-violet-300">Capture LED</span> 在拍摄/录像时点亮；配合 Meta View 中的隐私与数据管理入口。
+                        </DesignLogicRow>
+                        <DesignLogicRow label="用户价值" accentClass="text-violet-200/75">
+                          降低「被偷拍」的不确定感，缓解公共场合佩戴时的社交张力。
+                        </DesignLogicRow>
+                        <DesignLogicRow label="行业意义" accentClass="text-violet-200/75">
+                          为面部可穿戴设备提供可复制的<span className="text-violet-300">「可见性伦理」</span>参考，而非事后追责式补救。
+                        </DesignLogicRow>
+                      </div>
+                    </div>
+                    <div className="mt-auto shrink-0 border-t border-violet-200/20 bg-violet-300/10 px-5 py-3 text-sm text-violet-50/95">
+                      <span className="text-white/90">设计策略：</span>
+                      将隐私与伦理风险从舆论危机前移为当下可感知交互，把信任做成产品的一部分。
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
               </div>
             </div>
           </section>
@@ -733,26 +820,73 @@ export default function Home({ targetSection }: HomeProps) {
               <div className="relative space-y-8">
                 <SectionLabel no="08" label="市场反响与关键指标" />
                 <Hairline />
-                <div className="grid gap-6 md:grid-cols-2">
-              <div className="space-y-4">
-                <h2 className="text-2xl md:text-3xl">销量与市占</h2>
-                <p className="text-sm text-white/75">2025 年销量超 700 万副，同比增超 2 倍；上半年为去年同期三倍以上。累计早前突破 200 万台，为全球首款破 200 万台的智能眼镜。市占约 85%（Omdia）。</p>
-                <p className="text-sm text-white/75">以 200 万副量级估算销售收入超 6 亿美元；消费者兴趣持续升温，AI 功能推送后销量呈倍数增长。</p>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="rounded-2xl border border-white/10 bg-black/30 p-4 text-center">
-                  <div className="text-2xl font-bold text-white">700 万+</div>
-                  <div className="mt-1 text-xs text-white/60">2025 年销量（副）</div>
+                <div className="grid gap-4 md:grid-cols-3 md:items-stretch">
+                  {/* 销量与增长 */}
+                  <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-emerald-300/20 bg-emerald-400/[0.06]">
+                    <div className="flex flex-1 flex-col p-5">
+                      <div className="flex items-center gap-2 text-emerald-100/90">
+                        <TrendingUp size={18} aria-hidden />
+                        <span className="text-xs tracking-[0.2em]">销量与增长</span>
+                      </div>
+                      <h2 className="mt-2 text-lg font-semibold text-white">规模与增速</h2>
+                      <div className="mt-4 flex flex-1 flex-col gap-2.5">
+                        <DesignLogicRow label="核心表现" accentClass="text-emerald-200/75">
+                          <span className="text-emerald-300 font-semibold">2025</span> 全年销量超 <span className="font-semibold text-emerald-300">700 万</span> 副，同比增超 2 倍；上半年约为去年同期 <span className="font-semibold text-emerald-300">3 倍</span> 以上；累计突破 <span className="font-semibold text-emerald-300">200 万</span> 副，全球首款达该量级的智能眼镜（行业报道口径）。
+                        </DesignLogicRow>
+                        <DesignLogicRow label="数据支撑" accentClass="text-emerald-200/75">
+                          AI 功能持续迭代，推动产品从尝鲜走向日常，用户需求倍数级释放。
+                        </DesignLogicRow>
+                        <DesignLogicRow label="市场洞察" accentClass="text-emerald-200/75">
+                          硬件体验决定「能不能天天戴」。
+                        </DesignLogicRow>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 市占与地位 */}
+                  <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-cyan-300/20 bg-cyan-400/[0.06]">
+                    <div className="flex flex-1 flex-col p-5">
+                      <div className="flex items-center gap-2 text-cyan-100/90">
+                        <Award size={18} aria-hidden />
+                        <span className="text-xs tracking-[0.2em]">市占与行业地位</span>
+                      </div>
+                      <h2 className="mt-2 text-lg font-semibold text-white">壁垒与范本</h2>
+                      <div className="mt-4 flex flex-1 flex-col gap-2.5">
+                        <DesignLogicRow label="核心表现" accentClass="text-cyan-200/75">
+                          全球无屏 AI 眼镜市占约 <span className="font-semibold text-cyan-300">85%</span>（<span className="text-cyan-200/90">Omdia</span>），占据主导地位；以公开报道量级估算，累计销售收入超 <span className="font-semibold text-cyan-300">6 亿美元</span>。
+                        </DesignLogicRow>
+                        <DesignLogicRow label="数据支撑" accentClass="text-cyan-200/75">
+                          定义无屏 AI 眼镜产品形态，成为时尚 × 科技跨界融合的商业化范本。
+                        </DesignLogicRow>
+                        <DesignLogicRow label="市场洞察" accentClass="text-cyan-200/75">
+                          品牌与渠道决定「能不能破圈」。
+                        </DesignLogicRow>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 产能与赛道 */}
+                  <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-violet-300/20 bg-violet-400/[0.06]">
+                    <div className="flex flex-1 flex-col p-5">
+                      <div className="flex items-center gap-2 text-violet-100/90">
+                        <Rocket size={18} aria-hidden />
+                        <span className="text-xs tracking-[0.2em]">产能与赛道趋势</span>
+                      </div>
+                      <h2 className="mt-2 text-lg font-semibold text-white">供给与空间</h2>
+                      <div className="mt-4 flex flex-1 flex-col gap-2.5">
+                        <DesignLogicRow label="核心表现" accentClass="text-violet-200/75">
+                          <span className="text-violet-300 font-semibold">2026</span> 年底年产能规划约 <span className="font-semibold text-violet-300">1000 万</span> 台；无屏智能眼镜 <span className="text-violet-300 font-semibold">2025</span> 年同比增速约 <span className="font-semibold text-violet-300">+247%</span>（<span className="text-violet-200/90">IDC</span>，产业/媒体口径）。
+                        </DesignLogicRow>
+                        <DesignLogicRow label="数据支撑" accentClass="text-violet-200/75">
+                          AI 能力持续升级，驱动无屏眼镜成为下一代核心智能硬件入口之一。
+                        </DesignLogicRow>
+                        <DesignLogicRow label="市场洞察" accentClass="text-violet-200/75">
+                          AI 生态决定「能走多远」。
+                        </DesignLogicRow>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="rounded-2xl border border-white/10 bg-black/30 p-4 text-center">
-                  <div className="text-2xl font-bold text-white">85%</div>
-                  <div className="mt-1 text-xs text-white/60">全球市占（Omdia）</div>
-                </div>
-                <div className="rounded-2xl border border-white/10 bg-black/30 p-4 text-center col-span-2">
-                  <div className="text-sm text-white/80">产能规划：2026 年底年产能 1000 万台；无屏智能眼镜 2025 年增速约 +247%（IDC）</div>
-                </div>
-              </div>
-            </div>
               </div>
             </div>
           </section>
@@ -781,6 +915,62 @@ export default function Home({ targetSection }: HomeProps) {
             <div className="mt-6">
               <Figure src={'/report_media/产业链图谱.png'} caption={'产业链图谱'} credit={'艾瑞咨询'} />
             </div>
+            <div className="mt-8">
+              <div className="text-xs tracking-[0.28em] text-white/55">FOCUS · 三家代表企业深度分析</div>
+              <div className="mt-4 grid gap-4 md:grid-cols-3">
+                <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-cyan-300/20 bg-cyan-400/[0.06]">
+                  <div className="flex-1 p-5">
+                    <div className="flex items-center justify-between">
+                      <div className="rounded-lg border border-cyan-200/25 bg-black/25 px-2 py-1 text-[11px] text-cyan-100/90">低功耗音频中枢</div>
+                      <div className="text-xs text-cyan-100/70">BES</div>
+                    </div>
+                    <h3 className="mt-3 text-lg font-semibold text-white">恒玄科技（BES）</h3>
+                    <div className="mt-3 text-xs tracking-[0.2em] text-cyan-100/75">FACT</div>
+                    <ul className="mt-2 space-y-1 text-sm text-white/75">
+                      <li>智能眼镜 SoC 方向聚焦语音交互与低功耗连接。</li>
+                      <li>能力映射远场拾音、语音唤醒、降噪与本地音频链路。</li>
+                    </ul>
+                  </div>
+                  <div className="border-t border-cyan-200/20 bg-cyan-300/10 px-5 py-3 text-sm text-cyan-50/90">
+                    <span className="text-white">INSIGHT：</span>解决“语音交互与续航”双约束，是无屏 AI 眼镜可用性的底层保障。
+                  </div>
+                </div>
+                <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-violet-300/20 bg-violet-400/[0.06]">
+                  <div className="flex-1 p-5">
+                    <div className="flex items-center justify-between">
+                      <div className="rounded-lg border border-violet-200/25 bg-black/25 px-2 py-1 text-[11px] text-violet-100/90">精密制造底座</div>
+                      <div className="text-xs text-violet-100/70">GTK</div>
+                    </div>
+                    <h3 className="mt-3 text-lg font-semibold text-white">歌尔股份（Goertek）</h3>
+                    <div className="mt-3 text-xs tracking-[0.2em] text-violet-100/75">FACT</div>
+                    <ul className="mt-2 space-y-1 text-sm text-white/75">
+                      <li>Meta 智能眼镜供应链关键制造伙伴之一。</li>
+                      <li>将声学/光学/电池/无线元件高密度压缩进镜腿与镜框。</li>
+                    </ul>
+                  </div>
+                  <div className="border-t border-violet-200/20 bg-violet-300/10 px-5 py-3 text-sm text-violet-50/90">
+                    <span className="text-white">INSIGHT：</span>把原型能力变成消费级量产能力，决定交付速度、良率与成本曲线。
+                  </div>
+                </div>
+                <div className="flex h-full flex-col overflow-hidden rounded-2xl border border-emerald-300/20 bg-emerald-400/[0.06]">
+                  <div className="flex-1 p-5">
+                    <div className="flex items-center justify-between">
+                      <div className="rounded-lg border border-emerald-200/25 bg-black/25 px-2 py-1 text-[11px] text-emerald-100/90">时尚溢价引擎</div>
+                      <div className="text-xs text-emerald-100/70">EL</div>
+                    </div>
+                    <h3 className="mt-3 text-lg font-semibold text-white">陆逊梯卡（EssilorLuxottica）</h3>
+                    <div className="mt-3 text-xs tracking-[0.2em] text-emerald-100/75">FACT</div>
+                    <ul className="mt-2 space-y-1 text-sm text-white/75">
+                      <li>与 Meta 长期合作，整合 Ray-Ban 品牌、设计与光学制造。</li>
+                      <li>依托全球零售网络，把产品从科技圈扩展到大众消费场景。</li>
+                    </ul>
+                  </div>
+                  <div className="border-t border-emerald-200/20 bg-emerald-300/10 px-5 py-3 text-sm text-emerald-50/90">
+                    <span className="text-white">INSIGHT：</span>让 AI 硬件具备“戴得出去”的社交属性，是规模化商业化的关键一环。
+                  </div>
+                </div>
+              </div>
+            </div>
               </div>
             </div>
           </section>
@@ -794,19 +984,106 @@ export default function Home({ targetSection }: HomeProps) {
               <div className="relative space-y-8">
                 <SectionLabel no="10" label="用户痛点与局限" />
                 <Hairline />
-                <div className="grid gap-6 md:grid-cols-2">
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
-                <h3 className="text-lg font-semibold text-white">续航与佩戴</h3>
-                <p className="mt-2 text-sm text-white/75">约 81% 用户提及续航；多数 3–4 小时需充电，Gen 2 约 8h 仍不足全天。鼻托压感明显，欧美版型在亚洲鼻梁上适配欠佳。</p>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
-                <h3 className="text-lg font-semibold text-white">AI 与音频</h3>
-                <p className="mt-2 text-sm text-white/75">开放式扬声器在户外听不清；AI 以音频为主、形式单一。国内 Meta AI 不可用、中文支持弱，横评多不推荐国内用户首选。</p>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-4 md:col-span-2">
-                <p className="text-sm text-white/75">隐私与社交：头顶/前方摄像头引发顾虑；录制指示灯缓解但未完全消除焦虑。行业层面电商退货率约 30%–50%。</p>
-              </div>
-            </div>
+                <div className="grid gap-4 md:grid-cols-3 md:items-stretch">
+                  {/* 硬件体验 */}
+                  <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-2xl border border-emerald-300/20 bg-emerald-400/[0.06]">
+                    <div className="flex min-h-0 flex-1 flex-col p-5">
+                      <div className="flex items-center gap-2 text-emerald-100/90">
+                        <Battery size={16} aria-hidden />
+                        <span className="text-xs tracking-[0.2em]">硬件体验</span>
+                      </div>
+                      <h3 className="mt-2 text-lg font-semibold text-white">续航与佩戴</h3>
+                      <div className="mt-4 flex flex-1 flex-col gap-2.5">
+                        <PainScanRow label="核心痛点">
+                          续航仍偏短（初代约 <span className="font-semibold text-emerald-300">3–4h</span>，Gen2 约 <span className="font-semibold text-emerald-300">8h</span>）；镜架偏欧美版，亚洲佩戴易不适。
+                        </PainScanRow>
+                        <PainScanRow label="用户影响">随身场景受限，难替代传统眼镜的日常属性。</PainScanRow>
+                        <PainScanRow label="优化方向">低功耗芯片 + 亚洲版人体工学镜架。</PainScanRow>
+                      </div>
+                      <Collapsible className="mt-3 shrink-0">
+                        <CollapsibleTrigger className="group flex w-full items-center justify-between gap-2 rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 text-left text-xs text-white/70 transition-colors hover:bg-white/[0.07]">
+                          <span>详情与依据</span>
+                          <ChevronDown className="size-4 shrink-0 text-white/50 transition-transform duration-200 group-data-[state=open]:rotate-180" aria-hidden />
+                        </CollapsibleTrigger>
+                        <CollapsibleContent>
+                          <ul className="mt-2 space-y-1.5 rounded-lg border border-white/8 bg-black/30 p-3 text-xs leading-relaxed text-white/60">
+                            <li>• 高强度使用下仍难支撑全天连续使用。</li>
+                            <li>• 鼻托压感、夹头等反馈较常见；第三方替换鼻托反映适配需求。</li>
+                          </ul>
+                        </CollapsibleContent>
+                      </Collapsible>
+                    </div>
+                    <div className="mt-auto shrink-0 border-t border-emerald-200/20 bg-emerald-300/10 px-5 py-3 text-sm text-emerald-50/90">
+                      INSIGHT：先解决「能久戴」，再谈规模渗透。
+                    </div>
+                  </div>
+
+                  {/* AI 功能 */}
+                  <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-2xl border border-cyan-300/20 bg-cyan-400/[0.06]">
+                    <div className="flex min-h-0 flex-1 flex-col p-5">
+                      <div className="flex items-center gap-2 text-cyan-100/90">
+                        <Bot size={16} aria-hidden />
+                        <span className="text-xs tracking-[0.2em]">AI 功能</span>
+                      </div>
+                      <h3 className="mt-2 text-lg font-semibold text-white">音频与交互</h3>
+                      <div className="mt-4 flex flex-1 flex-col gap-2.5">
+                        <PainScanRow label="核心痛点">
+                          开放式户外听感弱、漏音；无屏以音频为主；大陆 <span className="font-semibold text-cyan-200">Meta AI</span> 能力受限。
+                        </PainScanRow>
+                        <PainScanRow label="用户影响">核心 AI 难完整落地，国内体验易断层。</PainScanRow>
+                        <PainScanRow label="优化方向">声学升级 + 多模态交互 + 国内生态接入。</PainScanRow>
+                      </div>
+                      <Collapsible className="mt-3 shrink-0">
+                        <CollapsibleTrigger className="group flex w-full items-center justify-between gap-2 rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 text-left text-xs text-white/70 transition-colors hover:bg-white/[0.07]">
+                          <span>详情与依据</span>
+                          <ChevronDown className="size-4 shrink-0 text-white/50 transition-transform duration-200 group-data-[state=open]:rotate-180" aria-hidden />
+                        </CollapsibleTrigger>
+                        <CollapsibleContent>
+                          <ul className="mt-2 space-y-1.5 rounded-lg border border-white/8 bg-black/30 p-3 text-xs leading-relaxed text-white/60">
+                            <li>• 开放式结构在嘈杂环境中可懂度与隐私性常受诟病。</li>
+                            <li>• 无屏限制可视化与复杂任务；中文与区域服务依赖生态适配。</li>
+                          </ul>
+                        </CollapsibleContent>
+                      </Collapsible>
+                    </div>
+                    <div className="mt-auto shrink-0 border-t border-cyan-200/20 bg-cyan-300/10 px-5 py-3 text-sm text-cyan-50/90">
+                      INSIGHT：AI 价值在「能落地」，不在「能演示」。
+                    </div>
+                  </div>
+
+                  {/* 伦理风险 */}
+                  <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-2xl border border-violet-300/20 bg-violet-400/[0.06]">
+                    <div className="flex min-h-0 flex-1 flex-col p-5">
+                      <div className="flex items-center gap-2 text-violet-100/90">
+                        <ShieldAlert size={16} aria-hidden />
+                        <span className="text-xs tracking-[0.2em]">伦理风险</span>
+                      </div>
+                      <h3 className="mt-2 text-lg font-semibold text-white">隐私与社交</h3>
+                      <div className="mt-4 flex flex-1 flex-col gap-2.5">
+                        <PainScanRow label="核心痛点">
+                          摄像头引发社交顾虑；指示灯难完全消除担忧；行业监测线上退货约 <span className="font-semibold text-emerald-300">30%–50%</span>（口径不一）。
+                        </PainScanRow>
+                        <PainScanRow label="用户影响">信任与社交成本高，制约规模化与商业化节奏。</PainScanRow>
+                        <PainScanRow label="优化方向">隐私设计 + 社交感知 + 信任体系。</PainScanRow>
+                      </div>
+                      <Collapsible className="mt-3 shrink-0">
+                        <CollapsibleTrigger className="group flex w-full items-center justify-between gap-2 rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 text-left text-xs text-white/70 transition-colors hover:bg-white/[0.07]">
+                          <span>详情与依据</span>
+                          <ChevronDown className="size-4 shrink-0 text-white/50 transition-transform duration-200 group-data-[state=open]:rotate-180" aria-hidden />
+                        </CollapsibleTrigger>
+                        <CollapsibleContent>
+                          <ul className="mt-2 space-y-1.5 rounded-lg border border-white/8 bg-black/30 p-3 text-xs leading-relaxed text-white/60">
+                            <li>• 头顶 / 前置镜头易被解读为「被拍摄」风险。</li>
+                            <li>• 退货率区间因平台、品类、统计口径差异大，宜作趋势参考。</li>
+                          </ul>
+                        </CollapsibleContent>
+                      </Collapsible>
+                    </div>
+                    <div className="mt-auto shrink-0 border-t border-violet-200/20 bg-violet-300/10 px-5 py-3 text-sm text-violet-50/90">
+                      INSIGHT：伦理与信任是规模化的前置条件。
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </section>
@@ -954,41 +1231,62 @@ export default function Home({ targetSection }: HomeProps) {
               <div className="relative space-y-8">
                 <SectionLabel no="12" label="小结与趋势" />
                 <Hairline />
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-8 md:p-10">
-              <div className="grid gap-8 md:grid-cols-[1fr_320px]">
-                <div className="space-y-5">
-                  <h2 className="text-3xl md:text-4xl">从“眼镜”到“AI 饰品化”</h2>
-                  <p className="text-sm leading-relaxed text-white/75">
-                    Ray‑Ban Meta 的关键启示在于：<span className="text-white">当硬件足够隐形，AI 就会开始“饰品化”</span>——成为身份、风格与社交关系的一部分，而不仅是效率工具。
-                  </p>
-
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div className="rounded-2xl border border-white/10 bg-black/30 p-5">
-                      <div className="text-xs tracking-[0.28em] text-white/55">方向 A</div>
-                      <div className="mt-2 text-white">AI 饰品化</div>
-                      <div className="mt-2 text-sm leading-relaxed text-white/70">
-                        将能力封装为可更换镜腿模块/挂件：电池、相机、传感器、甚至模型订阅。
+                <div className="grid gap-4 md:grid-cols-2 md:items-stretch">
+                  {/* 趋势 A：AI 饰品化 */}
+                  <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-2xl border border-emerald-300/20 bg-emerald-400/[0.06]">
+                    <div className="flex flex-1 flex-col p-5">
+                      <div className="flex items-center gap-2 text-emerald-100/90">
+                        <Crown size={18} aria-hidden />
+                        <span className="text-xs tracking-[0.2em]">趋势 A</span>
+                      </div>
+                      <h2 className="mt-2 text-lg font-semibold text-white md:text-xl">
+                        <span className="text-emerald-300">AI 饰品化</span>
+                      </h2>
+                      <div className="mt-4 flex flex-1 flex-col gap-2.5">
+                        <DesignLogicRow label="趋势本质" accentClass="text-emerald-200/75">
+                          AI 硬件从「工具属性」转向<span className="font-semibold text-emerald-300">时尚配饰属性</span>，成为身份与风格的延伸，而非仅效率终端。
+                        </DesignLogicRow>
+                        <DesignLogicRow label="落地路径（Ray‑Ban Meta 延伸）" accentClass="text-emerald-200/75">
+                          将算力与传感封装为可演进形态：镜腿 / 挂件式模块（续航、传感、声学），配合 Remix 定制与多代迭代，走向可升级的「可穿戴单品」。
+                        </DesignLogicRow>
+                        <DesignLogicRow label="行业价值" accentClass="text-emerald-200/75">
+                          降低新硬件心理门槛，推动 AI 眼镜从尝鲜到日常，巩固 <span className="text-emerald-300">科技 × 时尚</span> 的商业范式。
+                        </DesignLogicRow>
                       </div>
                     </div>
-                    <div className="rounded-2xl border border-white/10 bg-black/30 p-5">
-                      <div className="text-xs tracking-[0.28em] text-white/55">方向 B</div>
-                      <div className="mt-2 text-white">无屏幕“第三 UI”</div>
-                      <div className="mt-2 text-sm leading-relaxed text-white/70">
-                        语音 + 环境视觉 + 触觉/手势，将手机任务流拆成可嵌入生活的 micro‑interactions。
+                  </div>
+
+                  {/* 趋势 B：无屏「第三 UI」 */}
+                  <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-2xl border border-violet-300/20 bg-violet-400/[0.06]">
+                    <div className="flex flex-1 flex-col p-5">
+                      <div className="flex items-center gap-2 text-violet-100/90">
+                        <Layers size={18} aria-hidden />
+                        <span className="text-xs tracking-[0.2em]">趋势 B</span>
+                      </div>
+                      <h2 className="mt-2 text-lg font-semibold text-white md:text-xl">
+                        无屏<span className="text-violet-300">「第三 UI」</span>
+                      </h2>
+                      <div className="mt-4 flex flex-1 flex-col gap-2.5">
+                        <DesignLogicRow label="趋势本质" accentClass="text-violet-200/75">
+                          打破手机 / VR「屏幕中心」范式，以语音、<span className="font-semibold text-violet-300">环境视觉</span>与轻交互构成无屏界面层。
+                        </DesignLogicRow>
+                        <DesignLogicRow label="落地路径（Ray‑Ban Meta 延伸）" accentClass="text-violet-200/75">
+                          将手机任务流拆解为可嵌入日常的 micro‑interactions：「Hey Meta」、第一视角拍摄、免手持直播与情境提示，减少掏手机切换成本。
+                        </DesignLogicRow>
+                        <DesignLogicRow label="行业价值" accentClass="text-violet-200/75">
+                          重构人机交互逻辑，让计算「回到生活现场」，为下一代随身智能设备定义交互语法。
+                        </DesignLogicRow>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-white/10 bg-[radial-gradient(700px_circle_at_20%_20%,rgba(88,255,255,0.14),transparent_60%),radial-gradient(700px_circle_at_70%_30%,rgba(173,88,255,0.14),transparent_60%)] p-6">
-                  <div className="text-xs tracking-[0.28em] text-white/55">CLOSING LINE</div>
-                  <p className="mt-3 text-lg leading-relaxed text-white">
-                    AI 硬件的第二形态不是再造一个屏幕，
-                    而是把计算悄悄塞回生活。
+                <div className="rounded-2xl border border-emerald-300/25 bg-emerald-400/[0.08] px-5 py-4 md:px-6 md:py-5">
+                  <div className="text-xs tracking-[0.28em] text-emerald-200/70">CLOSING LINE</div>
+                  <p className="mt-2 text-base leading-relaxed text-white/90 md:text-lg">
+                    AI 硬件的第二形态不是再造一块屏幕，而是把计算<span className="font-medium text-emerald-300">悄悄塞回生活</span>。
                   </p>
                 </div>
-              </div>
-            </div>
               </div>
             </div>
           </section>
@@ -1005,8 +1303,7 @@ export default function Home({ targetSection }: HomeProps) {
 
             <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
               <div className="mb-4 rounded-2xl border border-white/6 bg-black/20 p-3 text-xs text-white/60">
-                浙江大学 · 工业设计工程 · 课程：智能设计<br />
-                学号：22521323 · 姓名：王愉超 · 制作时间：2026-03-09
+                浙江大学 · 工业设计工程 · 课程：智能设计 · 学号：22521323 · 姓名：王愉超 · 制作时间：2026 年 3-4 月
               </div>
               <ol className="space-y-3 text-sm leading-relaxed text-white/75">
                 <li>
