@@ -152,7 +152,7 @@ function PainScanRow({
   return (
     <div className="rounded-lg border border-white/10 bg-black/25 px-3 py-2.5">
       <div className="text-[10px] font-medium tracking-[0.22em] text-white/45">{label}</div>
-      <p className="mt-1.5 min-h-[3.25rem] text-sm leading-snug text-white/82">{children}</p>
+      <p className="mt-1.5 text-sm leading-snug text-white/82">{children}</p>
     </div>
   );
 }
