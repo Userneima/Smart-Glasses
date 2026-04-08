@@ -616,28 +616,6 @@ export default function Home({ targetSection }: HomeProps) {
             </div>
 
             <div className="grid gap-8">
-              <div className="grid gap-6 md:grid-cols-2 mb-6">
-                <figure className="space-y-3">
-                  <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5">
-                    <video src={'/report_media/EMG 腕带演示视频.mp4'} controls playsInline className="w-full" preload="metadata" />
-                  </div>
-                  <figcaption className="text-xs leading-relaxed text-white/55">
-                    <span className="text-white/75">EMG 腕带演示视频</span>
-                    <span className="block pt-1 text-white/45">来源：Ray-Ban Meta 官网公开素材</span>
-                  </figcaption>
-                </figure>
-
-                <figure className="space-y-3">
-                  <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 h-72">
-                    <img src={'/report_media/腕带和眼镜.webp'} alt="腕带和眼镜" className="w-full h-full object-cover" loading="lazy" />
-                  </div>
-                  <figcaption className="text-xs leading-relaxed text-white/55">
-                    <span className="text-white/75">腕带和眼镜</span>
-                    <span className="block pt-1 text-white/45">来源：Ray-Ban Meta 官网公开素材</span>
-                  </figcaption>
-                </figure>
-              </div>
-
               <div className="space-y-5">
                 <h2 className="text-2xl md:text-3xl">实时翻译：无屏幕设备的“语言层 API”</h2>
                 <p className="text-sm leading-relaxed text-white/75">
@@ -653,27 +631,6 @@ export default function Home({ targetSection }: HomeProps) {
               {/* Image removed per request */}
 
               <div className="space-y-5">
-                <div className="grid gap-6 md:grid-cols-2">
-                  <figure className="space-y-3">
-                    <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 h-72">
-                      <img src={'/report_media/影视剧即时翻译效果.png'} alt="影视剧即时翻译效果" className="w-full h-full object-cover" loading="lazy" />
-                    </div>
-                    <figcaption className="text-xs leading-relaxed text-white/55">
-                      <span className="text-white/75">影视剧即时翻译效果</span>
-                      <span className="block pt-1 text-white/45">来源：Youtube账号sandyinthemood截取</span>
-                    </figcaption>
-                  </figure>
-
-                  <figure className="space-y-3">
-                    <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 h-72">
-                      <img src={'/report_media/发布会演示效果.png'} alt="发布会演示效果" className="w-full h-full object-cover" loading="lazy" />
-                    </div>
-                    <figcaption className="text-xs leading-relaxed text-white/55">
-                      <span className="text-white/75">发布会演示效果</span>
-                      <span className="block pt-1 text-white/45">来源：Meta发布会截图</span>
-                    </figcaption>
-                  </figure>
-                </div>
                 <h2 className="text-2xl md:text-3xl">智能声场：内容可信度的隐形变量</h2>
                 <p className="text-sm leading-relaxed text-white/75">
                   五麦克风阵列被官方用于强调“immersive audio recording”与在嘈杂/有风环境下更好表现。
@@ -1105,22 +1062,64 @@ export default function Home({ targetSection }: HomeProps) {
                         <img src={'/report_media/腕带和眼镜2.jpg'} alt="Ray-Ban Meta" className="w-full h-auto object-contain rounded-lg" />
                       </div>
                       <div>
-                        <h3 className="text-lg font-semibold text-white">Ray‑Ban Meta（行业标杆）</h3>
+                        <h3 className="text-lg font-semibold text-white">Ray‑Ban Meta Display（AR旗舰标杆）</h3>
                         <p className="mt-2 text-sm text-white/75">
-                          侧重于 <span className="highlight-marker">IMX681</span> 传感器带来的夜间成像素质与视频稳定性（虽仍逊于手机但已达可用门槛）；优势在于极高的操作隐蔽性与流畅感。
+                          搭载单眼全彩LCoS光波导显示屏，核心优势为AR虚实融合交互与第一视角内容生产；配套Meta Neural Band神经腕带，实现肌电手势操控，交互效率大幅提升。
                         </p>
                         <ul className="mt-3 list-disc pl-5 text-sm text-white/75">
-                          <li>图像：以传感器与算法优化为主，适合第一视角内容生产。</li>
-                          <li>交互：无屏+语音，低切换成本。</li>
+                          <li>显示与成像：单眼全彩LCoS光波导+12MP摄像头，兼顾AR交互与第一视角内容生产。</li>
+                          <li>交互：带屏AR+语音+肌电手势（腕带），多模态交互效率拉满。</li>
                         </ul>
                         <div className="mt-4 flex items-center gap-4">
-                          <div className="rounded-lg bg-black/30 p-3 text-sm text-white/75">续航（眼镜）：<span className="text-white">8h</span></div>
-                          <div className="rounded-lg bg-black/30 p-3 text-sm text-white/75">Meta 手环：<span className="text-white">8h</span></div>
+                          <div className="rounded-lg bg-black/30 p-3 text-sm text-white/75">续航（眼镜）：<span className="text-white">6h</span></div>
+                          <div className="rounded-lg bg-black/30 p-3 text-sm text-white/75">Meta Neural Band（神经腕带）：<span className="text-white">18h</span></div>
                         </div>
                         <div className="mt-4 rounded-lg border border-white/6 bg-black/20 p-3 text-sm text-white/70">
-                          <strong className="text-white">避坑式分析：</strong> 采用固定式一体化鼻托，鼻托区域集成了麦克风收音口，对低鼻梁人群贴合度不足，部分人佩戴易滑落。
+                          <strong className="text-white">避坑式分析：</strong> 带屏AR机身重量更高（约51g），长时间佩戴压感明显；LCoS屏幕户外亮度有限，强光下可视性下降；神经腕带需额外佩戴，增加随身负担。
                         </div>
                       </div>
+                    </div>
+                    <div className="grid gap-6 md:grid-cols-2">
+                      <figure className="space-y-3">
+                        <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5">
+                          <video src={'/report_media/EMG 腕带演示视频.mp4'} controls playsInline className="w-full" preload="metadata" />
+                        </div>
+                        <figcaption className="text-xs leading-relaxed text-white/55">
+                          <span className="text-white/75">EMG 腕带演示视频</span>
+                          <span className="block pt-1 text-white/45">来源：Ray-Ban Meta 官网公开素材</span>
+                        </figcaption>
+                      </figure>
+
+                      <figure className="space-y-3">
+                        <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 h-72">
+                          <img src={'/report_media/腕带和眼镜.webp'} alt="腕带和眼镜" className="w-full h-full object-cover" loading="lazy" />
+                        </div>
+                        <figcaption className="text-xs leading-relaxed text-white/55">
+                          <span className="text-white/75">腕带和眼镜</span>
+                          <span className="block pt-1 text-white/45">来源：Ray-Ban Meta 官网公开素材</span>
+                        </figcaption>
+                      </figure>
+                    </div>
+                    <div className="grid gap-6 md:grid-cols-2">
+                      <figure className="space-y-3">
+                        <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 h-72">
+                          <img src={'/report_media/影视剧即时翻译效果.png'} alt="影视剧即时翻译效果" className="w-full h-full object-cover" loading="lazy" />
+                        </div>
+                        <figcaption className="text-xs leading-relaxed text-white/55">
+                          <span className="text-white/75">影视剧即时翻译效果</span>
+                          <span className="block pt-1 text-white/45">来源：Youtube账号sandyinthemood截取</span>
+                        </figcaption>
+                      </figure>
+
+                      <figure className="space-y-3">
+                        <div className="overflow-hidden rounded-2xl border border-white/10 bg-white/5 h-72">
+                          <img src={'/report_media/发布会演示效果.png'} alt="发布会演示效果" className="w-full h-full object-cover" loading="lazy" />
+                        </div>
+                        <figcaption className="text-xs leading-relaxed text-white/55">
+                          <span className="text-white/75">发布会演示效果</span>
+                          <span className="block pt-1 text-white/45">来源：Meta发布会截图</span>
+                        </figcaption>
+                      </figure>
                     </div>
 
                     {/* 夸克 S1 卡片 */}
@@ -1191,12 +1190,12 @@ export default function Home({ targetSection }: HomeProps) {
                       </thead>
                       <tbody className="text-white/75">
                         <tr>
-                          <td className="border-b border-white/10 px-4 py-3 text-white">Ray‑Ban Meta</td>
-                          <td className="border-b border-white/10 px-4 py-3">IMX681（夜间成像与视频稳定）</td>
-                          <td className="border-b border-white/10 px-4 py-3">无屏；偏向轻量与外观一致性</td>
-                          <td className="border-b border-white/10 px-4 py-3">开放式扬声器（漏音问题明显）</td>
-                          <td className="border-b border-white/10 px-4 py-3">眼镜：6h；手环：8h（对比展示）</td>
-                          <td className="border-b border-white/10 px-4 py-3">隐形操作体验、重心与结构微调</td>
+                          <td className="border-b border-white/10 px-4 py-3 text-white">Ray-Ban Meta Display（AR旗舰）</td>
+                          <td className="border-b border-white/10 px-4 py-3">12MP IMX681（支持第一视角拍摄 + AR空间感知）</td>
+                          <td className="border-b border-white/10 px-4 py-3">单眼全彩LCoS光波导显示屏；支持AR虚实融合交互，显示位置可调节</td>
+                          <td className="border-b border-white/10 px-4 py-3">开放式扬声器（优化漏音控制，支持空间音频）+ 多麦克风阵列（通话降噪）</td>
+                          <td className="border-b border-white/10 px-4 py-3">眼镜：6h；Meta Neural Band 神经腕带：18h</td>
+                          <td className="border-b border-white/10 px-4 py-3">LCoS光波导集成设计、肌电手势交互（神经腕带）、AR空间定位优化</td>
                         </tr>
                         <tr>
                           <td className="border-b border-white/10 px-4 py-3 text-white">夸克 S1</td>
